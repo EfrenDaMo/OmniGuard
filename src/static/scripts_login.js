@@ -1,6 +1,7 @@
 // Función de inicio de sesión
+// Se ejecuta al hacer clic en el botón de inicio de sesión
 document.getElementById('loginBtn').addEventListener('click', function() {
-    const email = document.getElementById('email').value;
+    const email = document.getElementById('nombre').value;
     const password = document.getElementById('password').value;
     const recaptchaResponse = grecaptcha.getResponse();
     const recaptchaError = document.getElementById('recaptchaError');

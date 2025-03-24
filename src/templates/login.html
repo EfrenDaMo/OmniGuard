@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Login</title>
+        <link rel="stylesheet" href="../static/style_login.css">
+    </head>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <link rel="stylesheet" href="../static/style_login.css">
-</head>
+    <body>
+        <!-- Contenedor principal -->
+        <div class="login-container">
+            <h1>OmniGuard</h1>
+            
+            <!-- Formulario de inicio de sesión -->
+            <div class="input-group">
+                <label for="email">Nombre</label>
+                <input type="email" id="email" placeholder="Ingresa tu nombre de usuario">
+            </div>
+            
+            <!-- Campo de contraseña -->
+            <div class="input-group">
+                <label for="password">Contraseña</label>
+                <input type="password" id="password" placeholder="Ingresa tu contraseña">
+            </div>
+            
+            <!-- Contenedor para el reCAPTCHA -->
+            <div class="recaptcha-container">
+                <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+            </div>
 
-<body>
-    <!-- Contenedor principal -->
-    <div class="login-container">
-        <h1>OmniGuard</h1>
-        
-        <!-- Formulario de inicio de sesión -->
-        <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" placeholder="Ingresa tu email">
-        </div>
-        
-        <!-- Campo de contraseña -->
-        <div class="input-group">
-            <label for="password">Contraseña</label>
-            <input type="password" id="password" placeholder="Ingresa tu contraseña">
-        </div>
-        
-        <!-- Contenedor para el reCAPTCHA -->
-        <div class="recaptcha-container">
-            <div class="g-recaptcha" data-sitekey="6LeIxAcTAAAAAJcZVRqyHh71UMIEGNQ_MXjiZKhI"></div>
+            <!-- Mensajes de error -->
+            <div class="error-message" id="recaptchaError">Por favor, completa la verificación reCAPTCHA</div>
+            
+            <!-- Botones de inicio de sesión y creación de cuenta -->
+            <div class="buttons">
+                <button class="login-btn" id="loginBtn">login</button>
+                <!-- <button class="create-account-btn" id="createAccountBtn">crear cuenta</button> -->
+            </div>
         </div>
 
-        <!-- Mensajes de error -->
-        <div class="error-message" id="recaptchaError">Por favor, completa la verificación reCAPTCHA</div>
-        
-        <!-- Botones de inicio de sesión y creación de cuenta -->
-        <div class="buttons">
-            <button class="login-btn" id="loginBtn">login</button>
-            <!-- <button class="create-account-btn" id="createAccountBtn">crear cuenta</button> -->
-        </div>
-    </div>
-
-    <script src="../static/scripts_login.js"></script>
-    <!-- Script de reCAPTCHA -->
-    <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-</body>
+        <script src="../static/scripts_login.js"></script>
+        <!-- Script de reCAPTCHA -->
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+    </body>
 </html>
