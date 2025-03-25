@@ -1,0 +1,162 @@
+:root { /* Variables de color */
+    --primary-color: #6a1b9a;  /* Morado principal */
+    --primary-light: #9c4dcc;  /* Morado claro */
+    --primary-dark: #38006b;   /* Morado oscuro */
+    --secondary-color: #ffab00; /* Amarillo/accent */
+    --text-dark: #2d3748;      /* Texto oscuro */
+    --text-light: #f8f9fa;     /* Texto claro */
+    --bg-light: #f5f3ff;       /* Fondo claro */
+    --error-color: #e53935;    /* Rojo para errores */
+    --success-color: #43a047;  /* Verde para éxito */
+}
+
+/* Estilos generales */
+* { 
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Estilos de la página de inicio de sesión */
+body {
+    background-color: var(--bg-light);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background-image: linear-gradient(135deg, var(--bg-light) 0%, #e1bee7 100%);
+}
+
+/* Estilos del contenedor principal */
+.login-container {
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 420px;
+    text-align: center;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Estilos de los elementos de la página de inicio de sesión */
+h1 {
+    color: var(--primary-dark);
+    margin-bottom: 1.5rem;
+    font-size: 1.8rem;
+    font-weight: 600;
+}
+
+/* Estilos de los campos de entrada */
+.input-group {
+    margin-bottom: 1.25rem;
+    text-align: left;
+}
+
+/* Estilos de las etiquetas de los campos de entrada */
+label {
+    display: block;
+    margin-bottom: 0.5rem;
+    color: var(--text-dark);
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+/* Estilos de los campos de entrada */
+input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+}
+
+/* Estilos de los campos de entrada al enfocarse */
+input:focus {
+    outline: none;
+    border-color: var(--primary-light);
+    box-shadow: 0 0 0 3px rgba(106, 27, 154, 0.1);
+}
+
+/* Estilos del contenedor de reCAPTCHA */
+.recaptcha-container {
+    margin: 1.5rem 0;
+    display: flex;
+    justify-content: center;
+}
+
+/* Estilos de los botones */
+.buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+/* Estilos de los botones */
+.login-btn {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Estilos de los botones al pasar el mouse sobre ellos */
+.login-btn:hover {
+    background-color: var(--primary-dark);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(106, 27, 154, 0.2);
+}
+
+/* Estilos del botón "Crear cuenta" */
+.create-account-btn {
+    background-color: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-light);
+    padding: 0.75rem;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Estilos del botón "Crear cuenta" al pasar el mouse sobre ellos */
+.create-account-btn:hover {
+    background-color: #f3e5f5;
+    border-color: var(--primary-color);
+    transform: translateY(-1px);
+}
+
+/* Estilos del mensaje de error */
+.error-message {
+    color: var(--error-color);
+    margin-top: 0.5rem;
+    font-size: 0.85rem;
+    display: none;
+}
+
+/* Estilos del logo */
+.logo {
+    margin-bottom: 1.5rem;
+}
+
+/* Estilos de la imagen del logo */
+.logo img {
+    height: 50px;
+}
+
+/* Estilos para dispositivos móviles */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 1.5rem;
+        margin: 0 1rem;
+    }
+}

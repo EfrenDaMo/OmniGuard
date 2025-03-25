@@ -1,1 +1,0 @@
-Relleno para que git reconozca el directorio

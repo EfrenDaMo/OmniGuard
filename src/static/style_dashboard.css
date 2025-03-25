@@ -1,0 +1,128 @@
+/* colores generales */
+:root {
+    --primary-color: #5c6bc0;
+    --primary-light: #8e99f3;
+    --primary-dark: #26418f;
+    --secondary-color: #26a69a;
+    --text-dark: #263238;
+    --text-light: #f5f5f5;
+    --bg-light: #f5f5f5;
+    --error-color: #ef5350;
+    --success-color: #66bb6a;
+    --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+
+/* estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* estilos del dashboard */
+body {
+    background-color: var(--bg-light);
+    min-height: 100vh;
+    padding: 2rem;
+}
+
+/* estilos del header */
+.dashboard {
+    max-width: 1200px;
+    margin: 0 auto;
+    animation: fadeIn 0.5s ease;
+}
+
+/* animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* estilos del header */
+.header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* estilos de la información del usuario */
+.user-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+/* estilos del avatar */
+.avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background-color: var(--primary-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+/* estilos del nombre del usuario */
+.logout-btn {
+    background-color: var(--error-color);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* estilos del botón de logout al pasar el mouse sobre ellos */
+.logout-btn:hover {
+    background-color: #d32f2f;
+}
+
+/* estilos de las tarjetas */
+.cards-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 1.5rem;
+}
+
+/* estilos de las tarjetas */
+.card {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    transition: transform 0.3s ease;
+}
+
+/* estilos de las tarjetas al pasar el mouse sobre ellas */
+.card:hover {
+    transform: translateY(-5px);
+}
+
+/* estilos de las tarjetas */
+.card h3 {
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+
+/* estilos de las tarjetas */
+@media (max-width: 768px) {
+    body {
+        padding: 1rem;
+    }
+    
+    .header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+}
