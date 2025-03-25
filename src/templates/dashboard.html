@@ -1,59 +1,57 @@
-<!DOCTYPE html>
-<html lang="es">
+{# Indica que esta extendiendo el templete de base #}
+{% extends "base.html" %}
 
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Dashboard</title>
-        <link rel="stylesheet" href="../static/style_dashboard.css">
-    </head>
+{# Importa CSS relevante a la pagina #}
+{% block importes %}
+<link rel="stylesheet" href="../static/style_dashboard.css">
+{% endblock %}
 
-    <body>
-        <!-- Contenedor principal -->
-        <div class="dashboard">
-            <!-- Encabezado -->
-            <div class="header">
-                <h1>Mi Cuenta OmniGuard</h1>
 
-                <!-- Información del usuario -->
-                <div class="user-info">
-                    <div class="avatar" id="userAvatar">XD</div>
-                    <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
-                </div>
-            </div>
+{# Inserta el contenido de la pagina #}
+{% block contenido %}
+<!-- Contenedor principal -->
+<div class="dashboard">
+    <!-- Encabezado -->
+    <div class="header">
+        <h1>Mi Cuenta OmniGuard</h1>
 
-            <!-- Contenedor de tarjetas -->
-            <div class="cards-container">
-                <!-- Tarjetas -->
-                <div class="card">
-                    <h3>Resumen</h3>
-                    <p>
-                        Bienvenido a tu panel de control. Aquí puedes gestionar tu cuenta y
-                        ver tus estadísticas.
-                    </p>
-                </div>
+        <!-- Información del usuario -->
+        <div class="user-info">
+            <div class="avatar" id="userAvatar">XD</div>
+            <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </div>
 
-                <div class="card">
-                    <h3>Actividad Reciente</h3>
-                    <p>No hay actividad reciente para mostrar.</p>
-                </div>
-
-                <div class="card">
-                    <h3>Notificaciones</h3>
-                    <p>No hay estas solo 😔</p>
-                </div>
-
-                <div class="card">
-                    <h3>Configuración</h3>
-                    <p>
-                        Personaliza tu experiencia de usuario, como si no tuvieras otra
-                        mejor cosa que hacer.
-                    </p>
-                </div>
-            </div>
+    <!-- Contenedor de tarjetas -->
+    <div class="cards-container">
+        <!-- Tarjetas -->
+        <div class="card">
+            <h3>Resumen</h3>
+            <p>
+                Bienvenido a tu panel de control. Aquí puedes gestionar tu cuenta y
+                ver tus estadísticas.
+            </p>
         </div>
 
-        <script src="../static/script_dashboard.js"></script>
-    </body>
+        <div class="card">
+            <h3>Actividad Reciente</h3>
+            <p>No hay actividad reciente para mostrar.</p>
+        </div>
 
-</html>
+        <div class="card">
+            <h3>Notificaciones</h3>
+            <p>No hay estas solo 😔</p>
+        </div>
+
+        <div class="card">
+            <h3>Configuración</h3>
+            <p>
+                Personaliza tu experiencia de usuario, como si no tuvieras otra
+                mejor cosa que hacer.
+            </p>
+        </div>
+    </div>
+</div>
+
+<script src="../static/script_dashboard.js"></script>
+{% endblock %}

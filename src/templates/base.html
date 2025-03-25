@@ -1,0 +1,26 @@
+<!-- Base general que ocuparan todos los demas templetes -->
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Titulo especial con templete basico -->
+        <title> OmniGuard - {{titulo}} </title>
+
+        <!-- Informacion y los iconos -->
+        <link rel="apple-touch-icon" sizes="180x180" href="../static/icon/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="../static/icon/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="../static/icon/favicon-16x16.png">
+        <link rel="manifest" href="../static/icon/site.webmanifest">
+
+        {# Templete Basico para importar solo cosas relevantes al archivo #}
+        {% block importes %} {% endblock %}
+    </head>
+
+    <body>
+        {# Bloque que permite insertar contenido especifico de la pagina#}
+        {% block contenido %} {% endblock %}
+    </body>
+
+</html>
