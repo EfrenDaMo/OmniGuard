@@ -22,3 +22,9 @@ class Configuracion:
             "port": self.DB_PORT,
             "database": self.DB_NAME,
         }
+
+    def obtener_config_app(self) -> dict[str, bool | str]:
+        return {
+            "Debug": self.APP_DEBUG,
+            "Secret": self.APP_SECRET,
+        }
