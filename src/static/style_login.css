@@ -1,17 +1,27 @@
-:root { /* Variables de color */
-    --primary-color: #6a1b9a;  /* Morado principal */
-    --primary-light: #9c4dcc;  /* Morado claro */
-    --primary-dark: #38006b;   /* Morado oscuro */
-    --secondary-color: #ffab00; /* Amarillo/accent */
-    --text-dark: #2d3748;      /* Texto oscuro */
-    --text-light: #f8f9fa;     /* Texto claro */
-    --bg-light: #f5f3ff;       /* Fondo claro */
-    --error-color: #e53935;    /* Rojo para errores */
-    --success-color: #43a047;  /* Verde para éxito */
+:root {
+    /* Variables de color */
+    --primary-color: #6a1b9a;
+    /* Morado principal */
+    --primary-light: #9c4dcc;
+    /* Morado claro */
+    --primary-dark: #38006b;
+    /* Morado oscuro */
+    --secondary-color: #ffab00;
+    /* Amarillo/accent */
+    --text-dark: #2d3748;
+    /* Texto oscuro */
+    --text-light: #f8f9fa;
+    /* Texto claro */
+    --bg-light: #f5f3ff;
+    /* Fondo claro */
+    --error-color: #e53935;
+    /* Rojo para errores */
+    --success-color: #43a047;
+    /* Verde para éxito */
 }
 
 /* Estilos generales */
-* { 
+* {
     box-sizing: border-box;
     margin: 0;
     padding: 0;

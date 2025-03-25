@@ -9,7 +9,7 @@
     --bg-light: #f5f5f5;
     --error-color: #ef5350;
     --success-color: #66bb6a;
-    --card-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
 /* estilos generales */
@@ -36,8 +36,13 @@ body {
 
 /* animaciones */
 @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
 }
 
 /* estilos del header */
@@ -119,7 +124,7 @@ body {
     body {
         padding: 1rem;
     }
-    
+
     .header {
         flex-direction: column;
         align-items: flex-start;
