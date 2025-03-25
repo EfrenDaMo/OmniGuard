@@ -98,13 +98,16 @@ class BasedeDatos:
 
         if condiciones:
             clausula_where = " AND ".join(
-                [f"`{campo}`=%s" for campo in condiciones.keys()]
+                [f"`{campo}` = %s" for campo in condiciones.keys()]
             )
             consulta = f"SELECT {campos} FROM {tabla} WHERE {clausula_where}"
+            valores = list(condiciones.values())
+
+            self.__ejecutar_consulta(consulta, valores)
         else:
             consulta = f"SELECT {campos} FROM {tabla}"
+            self.__ejecutar_consulta(consulta)
 
-        self.__ejecutar_consulta(consulta)
         if self.cursor:
             return self.cursor.fetchall()
 
