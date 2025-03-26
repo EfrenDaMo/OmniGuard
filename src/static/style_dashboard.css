@@ -1,15 +1,25 @@
 /* Colores generales la idea se lo robe a un video de Youtube */
 :root {
-    --primary-color: #5c6bc0; /* Color principal */
-    --primary-light: #8e99f3; /* Color claro del principal */
-    --primary-dark: #26418f; /* Color oscuro del principal */
-    --secondary-color: #26a69a; /* Color secundario */
-    --text-dark: #263238; /* Color de texto oscuro */
-    --text-light: #f5f5f5; /* Color de texto claro */
-    --bg-light: #f5f5f5; /* Color de fondo claro */
-    --error-color: #ef5350; /* Color de error */
-    --success-color: #66bb6a; /* Color de éxito */
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra de las tarjetas */
+    --primary-color: #5c6bc0; 
+    /* Color principal */
+    --primary-light: #8e99f3; 
+    /* Color claro del principal */
+    --primary-dark: #26418f; 
+    /* Color oscuro del principal */
+    --secondary-color: #26a69a; 
+    /* Color secundario */
+    --text-dark: #263238; 
+    /* Color de texto oscuro */
+    --text-light: #f5f5f5; 
+    /* Color de texto claro */
+    --bg-light: #f5f5f5; 
+    /* Color de fondo claro */
+    --error-color: #ef5350; 
+    /* Color de error */
+    --success-color: #66bb6a; 
+    /* Color de éxito */
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    /* Sombra de las tarjetas */
 }
 
 /* Estilos generales */
@@ -89,6 +99,19 @@ body {
 /* Estilos del botón de logout al pasar el mouse */
 .logout-btn:hover {
     background-color: #d32f2f;
+}
+
+.back-link {
+    display: inline-block;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
 }
 
 /* Estilos de las tarjetas */
