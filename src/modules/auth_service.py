@@ -1,24 +1,30 @@
 from flask import session
+from modules.config import Configuracion
 from modules.models import Usuario
 from modules.database import BasedeDatos
 from modules.user_service import ServicioUsuario
-from werkzeug.security import generate_password_hash, check_password_hash
+from cryptography.fernet import Fernet, InvalidToken
 
 
 class ServicioAutentificacion:
     """Servicio para manejar la autentificacion de usuarios"""
 
     def __init__(self, bd: BasedeDatos) -> None:
+        self.__config = Configuracion().obtener_config_app()
         self.servicio_usuario: ServicioUsuario = ServicioUsuario(bd)
+
+        self.key: str = str(self.__config["Key"])
+        self.cypher: Fernet = Fernet(self.key.encode())
 
     def registrar_usuario(self, nombre: str, password: str):
         usuario_existente = self.servicio_usuario.obtener_usuarios_con_nombre(nombre)
+
         if usuario_existente:
             return {"success": True, "message": "El usuario ya existe"}
 
-        password_hash = generate_password_hash(password)
+        password_encryptado = self.cypher.encrypt(password.encode()).decode()
 
-        usuario_nuevo = Usuario(nombre=nombre, password=password_hash)
+        usuario_nuevo = Usuario(nombre=nombre, password=password_encryptado)
 
         try:
             self.servicio_usuario.crear_usuario(usuario_nuevo)
@@ -28,7 +34,6 @@ class ServicioAutentificacion:
 
     def iniciar_sesion(self, nombre: str, password: str) -> dict[str, str | bool]:
         """Inicia la session para un usuario"""
-
         usuario = self.servicio_usuario.obtener_usuarios_con_nombre(nombre)
 
         # Verifica que el usuario exista en el registro
@@ -36,7 +41,7 @@ class ServicioAutentificacion:
             return {"success": False, "message": "Usuario no encontrado"}
 
         # Verifica la Contraseña
-        if not check_password_hash(usuario.password, password):
+        if self.decriptar_password(usuario.password) != password:
             return {"success": False, "message": "Contraseña incorrecta"}
 
         # Inicia la sesión para el usuario
@@ -78,3 +83,6 @@ class ServicioAutentificacion:
             datos_usaurios.append(datos_usaurio)
 
         return datos_usaurios
+
+    def decriptar_password(self, password_encryptado: str) -> str:
+        return self.cypher.decrypt(password_encryptado.encode()).decode()

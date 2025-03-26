@@ -17,7 +17,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 userAvatar.textContent = data.usuario.nombre.charAt(0).toUpperCase();
             }
 
-            return fetch("/api/usuarios", {
+            return fetch("/api/users", {
                 method: "GET",
                 credentials: "include"
             });
@@ -35,9 +35,10 @@ document.addEventListener("DOMContentLoaded", function() {
                     <td>${usuario.id}</td>
                     <td>${usuario.nombre}</td>
                     <td>
-                        <span class="password-mask">
+                        <span class="password-mask" data-original-length="${originalPasswordLength}">
                             ${"*".repeat(originalPasswordLength)}
                         </span>
+                        <button class="btn-eye" data-id="${usuario.id}" data-visible="false" data-timeout="">👁️</button>
                     </td>
                 `;
 
@@ -71,5 +72,60 @@ document.addEventListener("DOMContentLoaded", function() {
             console.error("Error:", error);
             alert("Ocurrio un error al cerrar la sesión");
         });
+    });
+
+
+    document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-eye')) {
+            const btn = e.target;
+            const userId = e.target.dataset.id;
+            const passwordSpan = e.target.previousElementSibling;
+            const isVisible = btn.dataset.visible === 'true';
+            const originalLength = parseInt(passwordSpan.dataset.originalLength)
+            let timeoutID;
+
+            try {
+                if (!isVisible) {
+                    btn.disabled = true;
+                    btn.textContent = '...';
+
+                    const response = await fetch(`/api/users/decrypt-password/${userId}`, {
+                        method: "GET",
+                        credentials: "include"
+                    });
+
+                    const data = await response.json()
+
+                    if (data.success) {
+                        passwordSpan.textContent = data.password;
+                        btn.textContent = "🔒";
+                        btn.dataset.visible = 'true';
+
+                        timeoutID = setTimeout(() => {
+                            passwordSpan.textContent = "*".repeat(originalLength);
+                            btn.textContent = "👁️";
+                            btn.dataset.visible = 'false';
+                        }, 30000);
+                    } else {
+                        alert('Error: ' + data.message);
+                        btn.textContent = '👁️';
+                        btn.disabled = false;
+                    }
+                } else {
+                    passwordSpan.textContent = '*'.repeat(originalLength);
+                    btn.textContent = '👁️';
+                    btn.dataset.visible = 'false';
+                    clearTimeout(timeoutID);
+                }
+            } catch (err) {
+                console.error("Decrypt error:", err)
+                btn.textContent = '👁️';
+                btn.disabled = false;
+            } finally {
+                btn.disabled = false;
+
+                if (timeoutID) btn.dataset.timeout = timeoutID;
+            }
+        }
     });
 });

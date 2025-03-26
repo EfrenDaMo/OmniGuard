@@ -11,8 +11,9 @@ class Configuracion:
         self.DB_NAME: str = os.getenv("DB_NAME", "OmniGuard")
         self.DB_PASSWORD: str = os.getenv("DB_PASSWORD", "")
 
-        self.APP_DEBUG: bool = bool(os.getenv("APP_DEBUG", "False") == "True")
         self.APP_SECRET: str = os.getenv("APP_SECRET", "")
+        self.APP_DEBUG: bool = bool(os.getenv("APP_DEBUG", "False") == "True")
+        self.APP_KEY: str = os.getenv("APP_KEY", "")
 
     def obtener_config_bd(self) -> dict[str, str | int]:
         return {
@@ -25,6 +26,7 @@ class Configuracion:
 
     def obtener_config_app(self) -> dict[str, bool | str]:
         return {
+            "Key": self.APP_KEY,
             "Debug": self.APP_DEBUG,
             "Secret": self.APP_SECRET,
         }
