@@ -21,37 +21,82 @@
             <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
         </div>
     </div>
-
-    <!-- Contenedor de tarjetas -->
-    <div class="cards-container">
-        <!-- Tarjetas -->
-        <div class="card">
-            <h3>Resumen</h3>
-            <p>
-                Bienvenido a tu panel de control. Aquí puedes gestionar tu cuenta y
-                ver tus estadísticas.
-            </p>
+            
+            <!-- Contenedor de tarjetas -->
+            <div class="cards-container">
+                
+                <!-- Tarjetas -->
+                <div class="card">
+                    <h3>Resumen</h3>
+                    <p>
+                        Bienvenido a tu panel de control. Es una prueba de mis habilidades XD. 
+                        Asi que no te emociones
+                    </p>
+                </div>
+                
+                <div class="card">
+                    <h3>Actividad Reciente</h3>
+                    <p>No hay actividad reciente para mostrar.</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Notificaciones</h3>
+                    <p>No hay estas solo 😔</p>
+                </div>
+                
+                <div class="card">
+                    <h3>Configuración</h3>
+                    <p>
+                        Personaliza tu experiencia de usuario, 
+                        como si no tuvieras otra mejor cosa que hacer en tu vida XD
+                    </p>
+                </div>
         </div>
+        
+        <!-- Contenedor de la tabla -->
+        <div class="table-container">
+            <h2>Usuarios del Sistema (Prueba)</h2>
+            <table class="tabla-datos">
+              
+                <!-- Encabezado de la tabla -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Contraseña</th>
+                    </tr>
+                </thead>
+                
+                <!-- Cuerpo de la tabla -->
+                <!-- Aquí se pueden agregar más filas según sea necesario -->
+                <tbody>
+                    <tr>
+                        <td>001</td>
+                        <td>Juan Pérez</td>
+                        <td class="contrasena">••••••••</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>002</td>
+                        <td>María García</td>
+                        <td class="contrasena">••••••••</td>
+                    </tr>
+                    
+                    <tr>
+                        <td>003</td>
+                        <td>Carlos López</td>
+                        <td class="contrasena">••••••••</td>
+                    </tr>
 
-        <div class="card">
-            <h3>Actividad Reciente</h3>
-            <p>No hay actividad reciente para mostrar.</p>
+                    
+                    <tr>
+                        <td>004</td>
+                        <td>Ana Rodríguez</td>
+                        <td class="contrasena">••••••••</td>
+                    </tr>
+                </tbody>
+            </table>
         </div>
-
-        <div class="card">
-            <h3>Notificaciones</h3>
-            <p>No hay estas solo 😔</p>
-        </div>
-
-        <div class="card">
-            <h3>Configuración</h3>
-            <p>
-                Personaliza tu experiencia de usuario, como si no tuvieras otra
-                mejor cosa que hacer.
-            </p>
-        </div>
-    </div>
-</div>
-
+        
 <script src="../static/scripts_dashboard.js"></script>
 {% endblock %}

@@ -1,18 +1,18 @@
-/* colores generales */
+/* Colores generales la idea se lo robe a un video de Youtube */
 :root {
-    --primary-color: #5c6bc0;
-    --primary-light: #8e99f3;
-    --primary-dark: #26418f;
-    --secondary-color: #26a69a;
-    --text-dark: #263238;
-    --text-light: #f5f5f5;
-    --bg-light: #f5f5f5;
-    --error-color: #ef5350;
-    --success-color: #66bb6a;
-    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --primary-color: #5c6bc0; /* Color principal */
+    --primary-light: #8e99f3; /* Color claro del principal */
+    --primary-dark: #26418f; /* Color oscuro del principal */
+    --secondary-color: #26a69a; /* Color secundario */
+    --text-dark: #263238; /* Color de texto oscuro */
+    --text-light: #f5f5f5; /* Color de texto claro */
+    --bg-light: #f5f5f5; /* Color de fondo claro */
+    --error-color: #ef5350; /* Color de error */
+    --success-color: #66bb6a; /* Color de éxito */
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Sombra de las tarjetas */
 }
 
-/* estilos generales */
+/* Estilos generales */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -20,32 +20,31 @@
     font-family: 'Roboto', sans-serif;
 }
 
-/* estilos del dashboard */
+/* Estilos del dashboard */
 body {
     background-color: var(--bg-light);
     min-height: 100vh;
     padding: 2rem;
 }
 
-/* estilos del header */
+/* Estilos del contenedor principal */
 .dashboard {
     max-width: 1200px;
     margin: 0 auto;
     animation: fadeIn 0.5s ease;
 }
 
-/* animaciones */
+/* Animación al entrar al dashboard */
 @keyframes fadeIn {
-    from {
-        opacity: 0;
+    from { 
+        opacity: 0; 
     }
-
-    to {
-        opacity: 1;
+    to { 
+        opacity: 1; 
     }
 }
 
-/* estilos del header */
+/* Estilos del header */
 .header {
     display: flex;
     justify-content: space-between;
@@ -55,14 +54,14 @@ body {
     border-bottom: 1px solid #e0e0e0;
 }
 
-/* estilos de la información del usuario */
+/* Estilos de la información del usuario */
 .user-info {
     display: flex;
     align-items: center;
     gap: 1rem;
 }
 
-/* estilos del avatar */
+/* Estilos del avatar */
 .avatar {
     width: 50px;
     height: 50px;
@@ -76,7 +75,7 @@ body {
     font-size: 1.2rem;
 }
 
-/* estilos del nombre del usuario */
+/* Estilos del botón de logout */
 .logout-btn {
     background-color: var(--error-color);
     color: white;
@@ -87,19 +86,20 @@ body {
     transition: all 0.3s ease;
 }
 
-/* estilos del botón de logout al pasar el mouse sobre ellos */
+/* Estilos del botón de logout al pasar el mouse */
 .logout-btn:hover {
     background-color: #d32f2f;
 }
 
-/* estilos de las tarjetas */
+/* Estilos de las tarjetas */
 .cards-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 1.5rem;
+    margin-bottom: 2rem;
 }
 
-/* estilos de las tarjetas */
+/* Estilos individuales de las tarjetas */
 .card {
     background-color: white;
     border-radius: 10px;
@@ -108,26 +108,102 @@ body {
     transition: transform 0.3s ease;
 }
 
-/* estilos de las tarjetas al pasar el mouse sobre ellas */
+/* Estilos de las tarjetas al pasar el mouse */
 .card:hover {
     transform: translateY(-5px);
 }
 
-/* estilos de las tarjetas */
+/* Estilos de los títulos de las tarjetas */
 .card h3 {
     color: var(--primary-dark);
     margin-bottom: 1rem;
 }
 
-/* estilos de las tarjetas */
+/* Contenedor de la tabla */
+.table-container {
+    background-color: white;
+    border-radius: 10px;
+    padding: 1.5rem;
+    box-shadow: var(--card-shadow);
+    margin-top: 2rem;
+}
+
+/* Título de la tabla */
+.table-container h2 {
+    color: var(--primary-dark);
+    margin-bottom: 1rem;
+}
+
+/* Estilos de la tabla */
+.tabla-datos {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+}
+
+/* Estilos de la cabecera de la tabla */
+.tabla-datos thead {
+    background-color: var(--primary-dark);
+    color: var(--text-light);
+}
+
+/* Estilos de las celdas de la cabecera de la tabla */
+.tabla-datos th {
+    padding: 1rem;
+    text-align: left;
+    font-weight: 600;
+}
+
+/* Estilos de las filas de la tabla */
+.tabla-datos td {
+    padding: 1rem;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+/* Estilos de las filas pares de la tabla */
+.tabla-datos tr:nth-child(even) {
+    background-color: var(--bg-light);
+}
+
+/* Estilos de las filas al pasar el mouse sobre ellas */
+.tabla-datos tr:hover {
+    background-color: var(--primary-light);
+    transition: background-color 0.3s ease;
+}
+
+/* Estilos de los botones */
+.contrasena {
+    font-family: monospace;
+    letter-spacing: 1px;
+    color: var(--text-dark);
+}
+
+/* Estilos del footer */
+footer {
+    text-align: center;
+    padding: 1rem;
+    margin-top: 2rem;
+    color: var(--text-dark);
+}
+
+/* Parte de diseño responsivo, 100 en mi calificacion si llego hasta aqui y vio esto XD*/
 @media (max-width: 768px) {
     body {
         padding: 1rem;
     }
-
+    
     .header {
         flex-direction: column;
         align-items: flex-start;
         gap: 1rem;
+    }
+    
+    .cards-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .tabla-datos {
+        display: block;
+        overflow-x: auto;
     }
 }
