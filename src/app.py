@@ -1,6 +1,9 @@
 from flask import Flask
+
 from modules.routes import omni_bp
 from modules.auth_routes import auth_bp
+from modules.user_routes import usuarios_bp
+
 from modules.config import Configuracion
 from flask_cors import CORS
 
@@ -20,6 +23,7 @@ class Applicacion:
         # Register blueprints
         self.flask_app.register_blueprint(omni_bp)
         self.flask_app.register_blueprint(auth_bp)
+        self.flask_app.register_blueprint(usuarios_bp)
 
     def ejecutar(self, host: str = "localhost", port: int = 5000):
         self.flask_app.run(host=host, port=port)

@@ -61,3 +61,20 @@ class ServicioAutentificacion:
             }
 
         return {"success": False, "message": "No hay session activa"}
+
+    def obtener_datos_del_usuario(self) -> list[dict[str, str | int | None]] | None:
+        usuarios = self.servicio_usuario.obtener_usuarios()
+
+        if not usuarios:
+            return None
+
+        datos_usaurios: list[dict[str, str | int | None]] = []
+        for usuario in usuarios:
+            datos_usaurio: dict[str, str | int | None] = {
+                "id": usuario.id,
+                "nombre": usuario.nombre,
+                "password": usuario.password,
+            }
+            datos_usaurios.append(datos_usaurio)
+
+        return datos_usaurios

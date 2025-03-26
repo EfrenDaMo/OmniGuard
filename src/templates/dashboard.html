@@ -61,6 +61,7 @@
             <!-- Encabezado de la tabla -->
             <thead>
                 <tr>
+                    <th>#</th>
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Contraseña</th>
@@ -68,32 +69,8 @@
             </thead>
 
             <!-- Cuerpo de la tabla -->
-            <!-- Aquí se pueden agregar más filas según sea necesario -->
-            <tbody>
-                <tr>
-                    <td>001</td>
-                    <td>Juan Pérez</td>
-                    <td class="contrasena">••••••••</td>
-                </tr>
-
-                <tr>
-                    <td>002</td>
-                    <td>María García</td>
-                    <td class="contrasena">••••••••</td>
-                </tr>
-
-                <tr>
-                    <td>003</td>
-                    <td>Carlos López</td>
-                    <td class="contrasena">••••••••</td>
-                </tr>
-
-
-                <tr>
-                    <td>004</td>
-                    <td>Ana Rodríguez</td>
-                    <td class="contrasena">••••••••</td>
-                </tr>
+            <!-- Este se llena dinamicamente con los registros de la base de datos -->
+            <tbody id="userTableBody">
             </tbody>
         </table>
     </div>
