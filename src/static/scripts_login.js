@@ -24,16 +24,36 @@ document.addEventListener("DOMContentLoaded", function() {
             recaptchaError.style.display = "none";
         }
 
-        // Aquí iría la lógica para validar el login
-        console.log("Intentando login con:", name, password);
-        console.log("Respuesta reCAPTCHA:", recaptchaResponse);
-
-        //aquí iría la lógica para validar el login y el recaptcha
-
-        // Limpiar formulario después del login
-        document.getElementById("name").value = "";
-        document.getElementById("password").value = "";
-        grecaptcha.reset();
+        fetch("/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+                nombre: name,
+                password: password,
+                recaptcha: recaptchaResponse,
+            }),
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    window.location.href = "/dashboard";
+                } else {
+                    alert(data.message);
+                }
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                alert('Ocurrio un error al iniciar sesión');
+            })
+            .finally(() => {
+                // Limpiar formulario después del login
+                document.getElementById("name").value = "";
+                document.getElementById("password").value = "";
+                grecaptcha.reset();
+            });
     });
 
     //document.getElementById('createAccountBtn').addEventListener('click', function() {
