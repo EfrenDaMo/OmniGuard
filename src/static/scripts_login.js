@@ -35,28 +35,20 @@ document.addEventListener("DOMContentLoaded", function() {
                 password: password,
                 recaptcha: recaptchaResponse,
             }),
-        })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    window.location.href = "/dashboard";
-                } else {
-                    alert(data.message);
-                }
-            })
-            .catch(error => {
-                console.error("Error:", error);
-                alert('Ocurrio un error al iniciar sesión');
-            })
-            .finally(() => {
-                // Limpiar formulario después del login
-                document.getElementById("name").value = "";
-                document.getElementById("password").value = "";
-                grecaptcha.reset();
-            });
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                window.location.href = "/dashboard";
+            } else {
+                alert(data.message);
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+            alert('Ocurrio un error al iniciar sesión');
+        }).finally(() => {
+            // Limpiar formulario después del login
+            document.getElementById("name").value = "";
+            document.getElementById("password").value = "";
+            grecaptcha.reset();
+        });
     });
-
-    //document.getElementById('createAccountBtn').addEventListener('click', function() {
-    // Redirección a página de creación de cuenta
-    //});
 });

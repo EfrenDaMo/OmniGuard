@@ -13,12 +13,15 @@
 <div class="dashboard">
     <!-- Encabezado -->
     <div class="header">
-        <h1>Mi Cuenta OmniGuard</h1>
+        <div>
+            <h1>Mi Cuenta OmniGuard</h1>
+            <h2>Bienvenido, {{nombre}}!</h2>
+        </div
 
         <!-- Información del usuario -->
         <div class="user-info">
             <div class="avatar" id="userAvatar">XD</div>
-            <a href="create-user.html" class="back-link">Crear nuevo usuario</a>
+            <a class="back-link" id="newUserLink">Crear nuevo usuario</a>
             <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
         </div>
     </div>
@@ -56,7 +59,7 @@
 
     <!-- Contenedor de la tabla -->
     <div class="table-container">
-        <h2>Usuarios del Sistema (Prueba)</h2>
+        <h2>Usuarios del Sistema: </h2>
         <table class="tabla-datos">
 
             <!-- Encabezado de la tabla -->

@@ -21,6 +21,9 @@ class BasedeDatos:
                 self.conexion = conexion
                 self.cursor = self.conexion.cursor(dictionary=True)
                 self.conexion.autocommit = False
+                _ = self.conexion.cmd_query(
+                    "SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED"
+                )
                 print("Conexion Exitosa a la base de datos")
         except mysql.connector.Error as err:
             print(f"Error al conectarse a la base de datos: {err}")
@@ -67,10 +70,10 @@ class BasedeDatos:
         :param datos: Dictionario con pares de campo:valor
         """
         valores = list(datos.values())
-        campos = ",".join(datos.keys())
+        campos = ", ".join(datos.keys())
         marcadores = ", ".join(["%s"] * len(datos))
 
-        consulta = f"INSERT INTO `{tabla}` ({campos}) VALUES ({marcadores}])"
+        consulta = f"INSERT INTO `{tabla}` ({campos}) VALUES ({marcadores})"
 
         try:
             self.__ejecutar_consulta(consulta, valores)

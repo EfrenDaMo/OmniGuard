@@ -4,6 +4,45 @@ document.addEventListener("DOMContentLoaded", function() {
     const userTableBody = document.getElementById("userTableBody");
 
     // Se asegura que ciertas cosas pasen solo si se puede verificar la sesión
+    function cargarUsuarios() {
+        fetch(`/api/users?timestamp=${new Date().getTime()}`, {
+            method: "GET",
+            credentials: "include"
+        }).then(response => response.json()).then(data => {
+            if (data.success && userTableBody) {
+                userTableBody.innerHTML = "";
+
+                data.usuarios.forEach((usuario, index) => {
+                    const originalPasswordLength = Math.max(8, Math.min(22, Math.floor(usuario.password.length / 4))) / 2
+
+                    const row = document.createElement('tr')
+                    row.innerHTML = `
+                    <td>${index + 1}</td>
+                    <td>${usuario.id}</td>
+                    <td>${usuario.nombre}</td>
+                    <td>
+                        <span class="password-mask" data-original-length="${originalPasswordLength}">
+                            ${"*".repeat(originalPasswordLength)}
+                        </span>
+                        <button class="btn-eye" data-id="${usuario.id}" data-visible="false" data-timeout="">👁️</button>
+                    </td>
+                `;
+
+                    /*
+                    <td>
+                       <button class="btn-editar" data-id"${usuario.id}">Editar</button>
+                       <button class="btn-eliminar" data-id"${usuario.id}">Eliminar</button>
+                    </td>
+                    */
+                    userTableBody.appendChild(row)
+                });
+            }
+        }).catch(error => {
+            console.error("Error verificando sesión:", error);
+            window.location.href = "/login";
+        });
+    }
+
     fetch("/api/session", {
         method: "GET",
         credentials: "include",
@@ -17,43 +56,27 @@ document.addEventListener("DOMContentLoaded", function() {
                 userAvatar.textContent = data.usuario.nombre.charAt(0).toUpperCase();
             }
 
-            return fetch("/api/users", {
-                method: "GET",
-                credentials: "include"
-            });
-        }
-    }).then(response => response.json()).then(data => {
-        if (data.success && userTableBody) {
-            userTableBody.innerHTML = "";
-
-            data.usuarios.forEach((usuario, index) => {
-                const originalPasswordLength = Math.max(8, Math.min(22, Math.floor(usuario.password.length / 4))) / 2
-
-                const row = document.createElement('tr')
-                row.innerHTML = `
-                    <td>${index + 1}</td>
-                    <td>${usuario.id}</td>
-                    <td>${usuario.nombre}</td>
-                    <td>
-                        <span class="password-mask" data-original-length="${originalPasswordLength}">
-                            ${"*".repeat(originalPasswordLength)}
-                        </span>
-                        <button class="btn-eye" data-id="${usuario.id}" data-visible="false" data-timeout="">👁️</button>
-                    </td>
-                `;
-
-                /*
-                <td>
-                   <button class="btn-editar" data-id"${usuario.id}">Editar</button>
-                   <button class="btn-eliminar" data-id"${usuario.id}">Eliminar</button>
-                </td>
-                */
-                userTableBody.appendChild(row)
-            });
+            cargarUsuarios()
         }
     }).catch(error => {
         console.error("Error verificando sesión:", error);
         window.location.href = "/login";
+    });
+
+    document.getElementById("newUserLink").addEventListener("click", function() {
+        fetch("/api/session", {
+            method: "GET",
+            credentials: "include"
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                window.location.href = "/create-user"
+            } else {
+                alert(data.message)
+            }
+        }).catch(error => {
+            console.error("Error verificando sesión:", error);
+            window.location.href = "/login";
+        });
     });
 
     // Función de termino de sesión
@@ -128,4 +151,8 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         }
     });
+
+    window.addEventListener('focus', function() {
+        cargarUsuarios()
+    })
 });

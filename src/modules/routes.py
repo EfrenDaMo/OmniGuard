@@ -26,4 +26,11 @@ def login():
 @omni_bp.route("/dashboard")
 @require_login
 def dashboard():
-    return render_template("dashboard.html", titulo="Dashboard")
+    nombre_usuario = session.get("usuario_nombre", "Usuario")
+    return render_template("dashboard.html", titulo="Dashboard", nombre=nombre_usuario)
+
+
+@omni_bp.route("/create-user")
+@require_login
+def create_user():
+    return render_template("create-user.html", titulo="Usuario Nuevo")

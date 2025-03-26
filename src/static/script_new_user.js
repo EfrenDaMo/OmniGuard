@@ -1,5 +1,5 @@
 //sirve para validar el formulario de creación de usuario
-document.addEventListener('DOMContentLoaded', function() { 
+document.addEventListener('DOMContentLoaded', function() {
     const form = document.getElementById('userForm'); //formulario
     const fullnameInput = document.getElementById('fullname'); //nombre
     const passwordInput = document.getElementById('password'); //contraseña
@@ -20,7 +20,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // Envío del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Validación final
         if (passwordInput.value.length < 8) {
             passwordError.style.display = 'block';
@@ -28,20 +28,38 @@ document.addEventListener('DOMContentLoaded', function() {
             passwordInput.focus();
             return;
         }
-        
-        // Aca enviar los datos al servidor
-        console.log('Usuario creado:', {
-            nombre: fullnameInput.value,
-            password: passwordInput.value
-        });
-        
-        // Mostrar mensaje de éxito
-        form.style.display = 'none'; //ocultar formulario
-        successMessage.style.display = 'block'; //mostrar mensaje de éxito
 
-        // Limpiar campos del formulario
-        fullnameInput.value = '';
-        passwordInput.value = '';
-        
+        // Aca enviar los datos al servidor
+        fetch("/api/registro", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                nombre: fullnameInput.value,
+                password: passwordInput.value,
+            }),
+            credentials: "include"
+        }).then(response => response.json()).then(data => {
+            if (data.success) {
+                form.style.display = 'none'; //ocultar formulario
+                successMessage.style.display = 'block'; //mostrar mensaje de éxito
+
+                successMessage.innerHTML += "<p>Serás redirigido al dashboard en 5 segundos...</p>"
+
+                // Limpiar campos del formulario
+                fullnameInput.value = '';
+                passwordInput.value = '';
+
+                setTimeout(() => {
+                    window.location.href = '/dashboard?timestamp=' + new Date().getTime();
+                }, 5000);
+            } else {
+                alert(data.message || "Error al crear el usuario");
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrio un error al crear el usuario")
+        });
     });
 });

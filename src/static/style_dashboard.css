@@ -61,7 +61,7 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-bottom: 2rem;
-    padding-bottom: 1rem;
+    padding-bottom: .1rem;
     border-bottom: 1px solid #e0e0e0;
 }
 
@@ -70,6 +70,7 @@ body {
     display: flex;
     align-items: center;
     gap: 1rem;
+    padding-top: .5rem;
 }
 
 /* Estilos del avatar */

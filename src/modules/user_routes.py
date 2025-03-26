@@ -18,7 +18,13 @@ def obtener_usuarios():
     try:
         datos_usuarios = serv_auth.obtener_datos_del_usuario()
 
-        return jsonify({"success": True, "usuarios": datos_usuarios}), 200
+        respuesta = jsonify({"success": True, "usuarios": datos_usuarios})
+
+        respuesta.headers["Cache-Control"] = "no-store, no-cache, must-revalidate"
+        respuesta.headers["Pragma"] = "no-cache"
+        respuesta.headers["Expires"] = "0"
+
+        return respuesta
     except Exception as err:
         return jsonify({"success": False, "message": str(err)}), 500
 
