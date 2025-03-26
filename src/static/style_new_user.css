@@ -1,0 +1,200 @@
+/* Colores generales */
+:root {
+    --primary-color: #5c6bc0; 
+    /* Color principal */
+    --primary-light: #8e99f3; 
+    /* Color claro del principal */
+    --primary-dark: #26418f; 
+    /* Color oscuro del principal */
+    --secondary-color: #26a69a; 
+    /* Color secundario */
+    --text-dark: #263238; 
+    /* Color de texto oscuro */
+    --text-light: #f5f5f5; 
+    /* Color de texto claro */
+    --bg-light: #f5f5f5; 
+    /* Color de fondo claro */
+    --error-color: #ef5350; 
+    /* Color de error */
+    --success-color: #66bb6a; 
+    /* Color de éxito */
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); 
+    /* Sombra de las tarjetas */
+}
+
+/* Estilos generales */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-light);
+    color: var(--text-dark);
+    margin: 0;
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Estilos del contenedor principal */
+.card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 30px;
+    width: 100%;
+    max-width: 450px;
+}
+
+/* Estilos del título */
+h1 {
+    color: var(--primary-dark);
+    margin-top: 0;
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+/* Estilos del subtítulo */
+.form-group {
+    margin-bottom: 20px;
+}
+
+/* Estilos del subtítulo */
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--primary-dark);
+}
+
+/* Estilos del input */
+input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+    box-sizing: border-box;
+    transition: border-color 0.3s;
+}
+
+/* Estilos del input en foco */
+input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 2px var(--primary-light);
+}
+
+/* Estilos del mensaje de error */
+.password-requirements {
+    font-size: 14px;
+    color: var(--primary-dark);
+    margin-top: 5px;
+    padding-left: 5px;
+}
+
+/* Estilos del mensaje de error */
+.button-group {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+}
+
+/* Estilos del botón */
+.btn {
+    padding: 12px 20px;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+/* Estilos del botón primario */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+}
+
+/* Estilos del botón primario al pasar el mouse */
+.btn-primary:hover {
+    background-color: var(--primary-dark);
+}
+
+/* Estilos del botón secundario */
+.back-link {
+    display: inline-block;
+    margin-bottom: 20px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+/* Estilos del botón secundario al pasar el mouse */
+.back-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* Estilos del divisor */
+.divider {
+    height: 1px;
+    background-color: #eee;
+    margin: 25px 0;
+}
+
+/* Estilos del mensaje de error */
+.error-message {
+    color: var(--error-color);
+    font-size: 14px;
+    margin-top: 5px;
+    display: none;
+}
+
+/* Estilos del mensaje de éxito */
+.success-message {
+    color: var(--success-color);
+    font-size: 16px;
+    text-align: center;
+    margin-top: 20px;
+    display: none;
+}
+
+/* Parte responsiva */
+@media (max-width: 500px) {
+    .card {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 20px;
+    }
+
+    .subtitle {
+        font-size: 14px;
+    }
+
+    input {
+        font-size: 14px;
+    }
+
+    .password-requirements {
+        font-size: 12px;
+    }
+
+    .btn {
+        font-size: 14px;
+    }
+
+    .back-link {
+        font-size: 14px;
+    }
+
+    .error-message {
+        font-size: 12px;
+    }
+
+    .success-message {
+        font-size: 14px;
+    }
+}
