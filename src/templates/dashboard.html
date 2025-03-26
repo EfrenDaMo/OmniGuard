@@ -1,25 +1,26 @@
-<!DOCTYPE html>
-<html lang="es">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Dashboard</title>
-        <link rel="stylesheet" href="../static/style_dashboard.css" />
-    </head>
-    <body>
-        <!-- Contenedor principal -->
-        <div class="dashboard">
-            
-            <!-- Encabezado -->
-            <div class="header">
-                <h1>Mi Cuenta OmniGuard</h1>
-                
-                <!-- Información del usuario -->
-                <div class="user-info">
-                    <div class="avatar" id="userAvatar">XD</div>
-                    <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
-                </div>
-            </div>
+{# Indica que esta extendiendo el templete de base #}
+{% extends "base.html" %}
+
+{# Importa CSS relevante a la pagina #}
+{% block importes %}
+<link rel="stylesheet" href="../static/style_dashboard.css">
+{% endblock %}
+
+
+{# Inserta el contenido de la pagina #}
+{% block contenido %}
+<!-- Contenedor principal -->
+<div class="dashboard">
+    <!-- Encabezado -->
+    <div class="header">
+        <h1>Mi Cuenta OmniGuard</h1>
+
+        <!-- Información del usuario -->
+        <div class="user-info">
+            <div class="avatar" id="userAvatar">XD</div>
+            <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
+        </div>
+    </div>
             
             <!-- Contenedor de tarjetas -->
             <div class="cards-container">
@@ -50,14 +51,13 @@
                         como si no tuvieras otra mejor cosa que hacer en tu vida XD
                     </p>
                 </div>
-            </div>
         </div>
         
         <!-- Contenedor de la tabla -->
         <div class="table-container">
             <h2>Usuarios del Sistema (Prueba)</h2>
             <table class="tabla-datos">
-
+              
                 <!-- Encabezado de la tabla -->
                 <thead>
                     <tr>
@@ -87,6 +87,7 @@
                         <td>Carlos López</td>
                         <td class="contrasena">••••••••</td>
                     </tr>
+
                     
                     <tr>
                         <td>004</td>
@@ -97,6 +98,5 @@
             </table>
         </div>
         
-        <script src="../static/script_dashboard.js"></script>
-    </body>
-</html>
+<script src="../static/scripts_dashboard.js"></script>
+{% endblock %}
