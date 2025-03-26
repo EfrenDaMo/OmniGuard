@@ -102,6 +102,19 @@ body {
     background-color: #d32f2f;
 }
 
+.back-link {
+    display: inline-block;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+}
+
+.back-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
 /* Estilos de las tarjetas */
 .cards-container {
     display: grid;
