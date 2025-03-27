@@ -1,17 +1,18 @@
 from flask import Blueprint, jsonify, session
 
 from modules.database import BasedeDatos
-from modules.auth_service import ServicioAutentificacion
+from modules.services_auth import ServicioAutenticacion
 
 
 usuarios_bp = Blueprint("usuarios", __name__)
 
 bd = BasedeDatos()
-serv_auth = ServicioAutentificacion(bd)
+serv_auth = ServicioAutenticacion(bd)
 
 
 @usuarios_bp.route("/api/users", methods=["GET"])
 def obtener_usuarios():
+    """Endpoint para obtener todos los usuarios."""
     if "usuario_id" not in session:
         return jsonify({"success": False, "message": "No autorizado"}), 401
 
@@ -25,24 +26,28 @@ def obtener_usuarios():
         respuesta.headers["Expires"] = "0"
 
         return respuesta
+
     except Exception as err:
         return jsonify({"success": False, "message": str(err)}), 500
 
 
-@usuarios_bp.route("/api/users/decrypt-password/<int:id_usuario>", methods=["GET"])
-def decriptar_password(id_usuario: int):
+@usuarios_bp.route("/api/users/decrypt-password/<int:id_usuario>", methods=["POST"])
+def desencriptar_password(id_usuario: int):
+    """Endpoint para desencriptar contraseña"""
     if "usuario_id" not in session:
         return jsonify({"success": False, "messages": "No autorizado"}), 401
 
     try:
         usuarios = serv_auth.obtener_datos_del_usuario()
-        if usuarios:
-            usuario_clave = next(
+
+        usuario_clave = (
+            next(
                 (usuario for usuario in usuarios if usuario["id"] == id_usuario),
                 None,
             )
-        else:
-            usuario_clave = None
+            if usuarios
+            else None
+        )
 
         if not usuario_clave:
             return jsonify({"success": False, "messages": "Usuario no encotrado"}), 404

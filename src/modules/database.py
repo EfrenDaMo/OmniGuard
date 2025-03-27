@@ -1,27 +1,29 @@
 import sys
 import mysql.connector
+from mysql.connector.types import RowItemType, RowType
+
 from modules.config import Configuracion
 from mysql.connector.abstracts import MySQLConnectionAbstract, MySQLCursorAbstract
 
 
 class BasedeDatos:
-    """Maneja la conexion con la Base de Datos implementado los metodos CRUD"""
+    """Maneja la conexión con la Base de Datos implementado los métodos CRUD."""
 
     def __init__(self) -> None:
-        """Crea un nuevo objeto de la conexion y la inica"""
-        self.cursor: MySQLCursorAbstract | None = None
-        self.conexion: MySQLConnectionAbstract | None = None
+        """Crea un nuevo objeto de la conexión y la inica."""
+        self.__cursor: MySQLCursorAbstract | None = None
+        self.__conexion: MySQLConnectionAbstract | None = None
         self.__config: dict[str, str | int] = Configuracion().obtener_config_bd()
 
     def conectar(self) -> None:
-        """Crea una nueva conexion a la base de datos y activa el cursor"""
+        """Crea una nueva conexión a la base de datos y activa el cursor."""
         try:
             conexion = mysql.connector.connect(**self.__config)
             if isinstance(conexion, MySQLConnectionAbstract):
-                self.conexion = conexion
-                self.cursor = self.conexion.cursor(dictionary=True)
-                self.conexion.autocommit = False
-                _ = self.conexion.cmd_query(
+                self.__conexion = conexion
+                self.__cursor = self.__conexion.cursor(dictionary=True)
+                self.__conexion.autocommit = False
+                _ = self.__conexion.cmd_query(
                     "SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED"
                 )
                 print("Conexion Exitosa a la base de datos")
@@ -30,44 +32,45 @@ class BasedeDatos:
             sys.exit(1)
 
     def desconectar(self) -> None:
-        """Desconecta la conexion activa a la base de datos"""
-        if self.cursor:
-            self.cursor.close()
-            self.cursor = None
+        """Desconecta la conexión activa a la base de datos."""
+        if self.__cursor:
+            self.__cursor.close()
+            self.__cursor = None
 
-        if self.conexion:
-            self.conexion.close()
-            self.conexion = None
+        if self.__conexion:
+            self.__conexion.close()
+            self.__conexion = None
 
     def __ejecutar_consulta(
         self,
         consulta: str,
         parametros: list[str] | None = None,
-    ):
+    ) -> None:
         """
-        Metodo para ejecutar consultas SQL
-        :param consulta: La consulta que se ejecutara
-        :param params: Parametros de la consulta (Opcional)
+        Método para ejecutar consultas SQL.
+
+        :param consulta: La consulta que se ejecutará
+        :param params: Parámetros de la consulta (Opcional)
         """
-        if not self.conexion:
+        if not self.__conexion:
             self.conectar()
 
         try:
-            if self.cursor and self.conexion:
+            if self.__cursor and self.__conexion:
                 if parametros:
-                    self.cursor.execute(consulta, parametros)
+                    self.__cursor.execute(consulta, parametros)
                 else:
-                    self.cursor.execute(consulta)
+                    self.__cursor.execute(consulta)
         except mysql.connector.Error as err:
             print(f"Error ejecutando consulta: {err}")
             raise
 
-    def crear(self, tabla: str, datos: dict[str, str]):
+    def crear(self, tabla: str, datos: dict[str, str]) -> None:
         """
-        Crear un nuevo registro
+        Crear un nuevo registro.
 
         :param tabla: Nombre de la tabla
-        :param datos: Dictionario con pares de campo:valor
+        :param datos: Diccionario con pares de campo:valor
         """
         valores = list(datos.values())
         campos = ", ".join(datos.keys())
@@ -87,13 +90,13 @@ class BasedeDatos:
         tabla: str,
         condiciones: dict[str, str] | None = None,
         campos: list[str] | str = "*",
-    ):
+    ) -> list[RowType | dict[str, RowItemType]]:
         """
-        Leer registro de la tabla
+        Leer registro de la tabla.
 
         :param tabla: Nombre de la tabla
-        :param condiciones: Dictionario opcional que contiene las condiciones de lectura
-        :param campos: Campos a escoger, se escogen todos por defecto
+        :param condiciones: Diccionario opcional que contiene las condiciones de lectura
+        :param campos: Campos a seleccionar, todos por defecto
         :return: Lista de los registros
         """
         if isinstance(campos, list):
@@ -103,77 +106,73 @@ class BasedeDatos:
             clausula_where = " AND ".join(
                 [f"`{campo}` = %s" for campo in condiciones.keys()]
             )
-            consulta = f"SELECT {campos} FROM {tabla} WHERE {clausula_where}"
+            consulta = f"SELECT {campos} FROM `{tabla}` WHERE {clausula_where}"
             valores = list(condiciones.values())
 
             self.__ejecutar_consulta(consulta, valores)
         else:
-            consulta = f"SELECT {campos} FROM {tabla}"
+            consulta = f"SELECT {campos} FROM `{tabla}`"
             self.__ejecutar_consulta(consulta)
 
-        if self.cursor:
-            return self.cursor.fetchall()
+        return self.__cursor.fetchall() if self.__cursor else []
 
     def actualizar(
         self,
         tabla: str,
         datos: dict[str, str],
         condiciones: dict[str, str],
-    ):
+    ) -> int:
         """
-        Actualizar registro
+        Actualizar registro(s).
 
         :param tabla: Nombre de la tabla
-        :param datos: Dictionario de campos a actualizar
-        :param condiciones: Dictionario que contiene las condiciones de actualizacion
-        :return: Numero de registros actualizados
+        :param datos: Diccionario de campos a actualizar
+        :param condiciones: Condiciones para la actualización
+        :return: Número de registros actualizados
         """
         clausula_set = ", ".join([f"`{campo}`=%s" for campo in datos.keys()])
         clausula_where = " AND ".join([f"`{campo}`=%s" for campo in condiciones.keys()])
 
         valores = list(datos.values()) + list(condiciones.values())
-
-        consulta = f"UPDATE {tabla} SET {clausula_set} WHERE {clausula_where}"
+        consulta = f"UPDATE `{tabla}` SET {clausula_set} WHERE {clausula_where}"
 
         try:
             self.__ejecutar_consulta(consulta, valores)
             self.confirmar()
 
-            if self.cursor:
-                return self.cursor.rowcount
+            return self.__cursor.rowcount if self.__cursor else 0
         except Exception as err:
             self.revertir()
             raise err
 
-    def eliminar(self, tabla: str, condiciones: dict[str, str]):
+    def eliminar(self, tabla: str, condiciones: dict[str, str]) -> int:
         """
-        Eliminar registro
+        Eliminar registro(s).
 
         :param tabla: Nombre de la tabla
-        :param condiciones: Dictionario que contiene las condiciones de eliminado
-        :return: Numero de registros eliminados o un error en caso de falla
+        :param condiciones: Condiciones para la eliminación
+        :return: Numero de registros eliminados
         """
         clausula_where = " AND ".join([f"`{campo}`=%s" for campo in condiciones.keys()])
 
-        consulta = f"DELETE FROM {tabla} WHERE {clausula_where}"
+        consulta = f"DELETE FROM `{tabla}` WHERE {clausula_where}"
         valores = list(condiciones.values())
 
         try:
             self.__ejecutar_consulta(consulta, valores)
             self.confirmar()
 
-            if self.cursor:
-                return self.cursor.rowcount
+            return self.__cursor.rowcount if self.__cursor else 0
         except Exception as err:
             self.revertir()
             raise err
 
-    def confirmar(self):
-        """Confirma la transaction actual"""
-        if self.conexion:
-            self.conexion.commit()
+    def confirmar(self) -> None:
+        """Confirma la transacción actual"""
+        if self.__conexion:
+            self.__conexion.commit()
 
-    def revertir(self):
-        """Revierte la transaction actual"""
-        if self.conexion:
-            self.conexion.rollback()
+    def revertir(self) -> None:
+        """Revierte la transacción actual"""
+        if self.__conexion:
+            self.__conexion.rollback()

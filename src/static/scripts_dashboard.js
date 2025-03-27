@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     btn.textContent = '...';
 
                     const response = await fetch(`/api/users/decrypt-password/${userId}`, {
-                        method: "GET",
+                        method: "POST",
                         credentials: "include"
                     });
 

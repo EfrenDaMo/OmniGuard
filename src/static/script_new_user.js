@@ -72,7 +72,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }).catch(error => {
             console.error("Error:", error);
-            alert("Ocurrio un error al crear el usuario")
+            alert("Ocurrió un error al crear el usuario")
         });
     });
 });
