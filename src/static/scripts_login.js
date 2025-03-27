@@ -1,29 +1,57 @@
 // Espera a que el contenido del DOM se cargue por completo
 document.addEventListener("DOMContentLoaded", function() {
-    // Función de inicio de sesión
-    // Se ejecuta al hacer clic en el botón de inicio de sesión
-    document.getElementById("loginBtn").addEventListener("click", function() {
-        // Se obtienen los valores de los campos
-        const name = document.getElementById("name").value.trim();
-        const password = document.getElementById("password").value.trim();
-        const recaptchaResponse = grecaptcha.getResponse();
-        const recaptchaError = document.getElementById("recaptchaError");
+    // Se obtiene los campos de la pagina
+    const loginBtn = document.getElementById("loginBtn");
+    const nameInput = document.getElementById("name");
+    const passworInput = document.getElementById("password");
+    const recaptchaError = document.getElementById("recaptchaError");
 
-        // Validar campos vacíos
-        if (!name || !password) {
-            alert("Por favor, llena todos los campos");
+    // Se valida la existencia de los campos
+    if (!loginBtn || !nameInput || !passworInput || !recaptchaError) {
+        console.error("Elementos requeridos no fueron encontrados en el DOM")
+        return;
+    }
+
+    loginBtn.addEventListener("click", function() {
+        // Se obtienen los valores de los campos
+        const name = nameInput.value.trim();
+        const password = passworInput.value.trim();
+
+        // Valida campos vacíos
+        if (!name && !password) {
+            alert("Por favor, ingresa tu nombre de usuario y contraseña");
             return;
         }
 
-        // Validar reCAPTCHA
+        if (!name) {
+            alert("Por favor, ingresa tu nombre de usuario");
+            return;
+        }
+
+        if (!password) {
+            alert("Por favor, ingresa contraseña");
+            return;
+        }
+
+        // Valida que exista el reCAPTCHA
+        if (typeof grecaptcha === "undefined") {
+            console.error("reCAPTCHA not loaded")
+            alert("Error de seguridad. Por favor, recarga la página.")
+            return;
+        }
+
+        // Valida la respuesta del reCAPTCHA
+        const recaptchaResponse = grecaptcha.getResponse();
+
         if (!recaptchaResponse) {
-            recaptchaError.textContent = "Por favor, completa el reCAPTCHA";
+            recaptchaError.textcontent = "por favor, completa el recaptcha";
             recaptchaError.style.display = "block";
             return;
-        } else {
-            recaptchaError.style.display = "none";
         }
 
+        recaptchaError.style.display = "none";
+
+        // Validar si los datos son validos para entrar
         fetch("/api/login", {
             method: "POST",
             headers: {
@@ -37,11 +65,14 @@ document.addEventListener("DOMContentLoaded", function() {
             }),
         }).then(response => response.json()).then(data => {
             if (data.success) {
-                window.location.href = "/dashboard";
+                // Redirectionar si se pudo hacer el login
+                window.location.href = `/dashboard?timestamp=${Date.now()}`;
             } else {
-                alert(data.message);
+                // Mostrar error si sucede
+                alert(data.message || "Error al iniciar sesión");
             }
         }).catch(error => {
+            // Mostrar error si sucede
             console.error("Error:", error);
             alert('Ocurrio un error al iniciar sesión');
         }).finally(() => {

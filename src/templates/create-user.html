@@ -3,7 +3,7 @@
 
 {# Importa CSS relevante a la pagina #}
 {% block importes %}
-<link rel="stylesheet" href="../static/style_new_user.css">
+<link rel="stylesheet" href="/static/style_new_user.css">
 {% endblock %}
 
 
@@ -45,5 +45,5 @@
     </div>
 </div>
 
-<script src="../static/script_new_user.js"></script>
+<script type="module" src="{{ url_for('static', filename='scripts_new_user.js') }}"></script>
 {% endblock %}

@@ -1,4 +1,14 @@
-from flask import Blueprint, redirect, render_template, session, url_for
+import os
+from flask import (
+    Blueprint,
+    current_app,
+    redirect,
+    render_template,
+    send_file,
+    send_from_directory,
+    session,
+    url_for,
+)
 
 omni_bp = Blueprint("omni", __name__, template_folder="../templates/")
 
@@ -34,3 +44,13 @@ def dashboard():
 @require_login
 def create_user():
     return render_template("create-user.html", titulo="Usuario Nuevo")
+
+
+@omni_bp.route("/static/<path:filename>")
+def serve_static(filename: str):
+    mimetype = "application/javascript" if filename.endswith(".js") else None
+    return send_from_directory(
+        directory=str(current_app.static_folder),
+        path=filename,
+        mimetype=mimetype,
+    )

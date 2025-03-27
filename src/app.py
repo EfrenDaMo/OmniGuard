@@ -11,7 +11,7 @@ from flask_cors import CORS
 class Applicacion:
     def __init__(self) -> None:
         self.__config: dict[str, str | bool] = Configuracion().obtener_config_app()
-        self.flask_app: Flask = Flask(__name__)
+        self.flask_app: Flask = Flask(__name__, static_folder="static")
 
         # Enable CORS for all routes
         _ = CORS(self.flask_app, supports_credentials=True)

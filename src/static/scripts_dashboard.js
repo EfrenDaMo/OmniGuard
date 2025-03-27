@@ -1,107 +1,112 @@
 // Espera a que el contenido del DOM se cargue por completo
 document.addEventListener("DOMContentLoaded", function() {
+    // Obtener elementos de la pagina
+    const logoutBtn = document.getElementById("logoutBtn");
     const userAvatar = document.getElementById("userAvatar");
+    const newUserLink = document.getElementById("newUserLink");
     const userTableBody = document.getElementById("userTableBody");
+
+    // Validar elementos esenciales
+    if (!userTableBody || !newUserLink || !logoutBtn) {
+        console.error("Elementos esenciales faltan en el DOM")
+        return;
+    }
 
     // Se asegura que ciertas cosas pasen solo si se puede verificar la sesión
     function cargarUsuarios() {
-        fetch(`/api/users?timestamp=${new Date().getTime()}`, {
+        fetch(`/api/users?timestamp=${Date.now()}`, {
             method: "GET",
             credentials: "include"
-        }).then(response => response.json()).then(data => {
+        }).then(response => {
+            if (!response.ok) throw new Error("HTTP error " + response.status);
+            return response.json();
+        }).then(data => {
             if (data.success && userTableBody) {
                 userTableBody.innerHTML = "";
 
                 data.usuarios.forEach((usuario, index) => {
-                    const originalPasswordLength = Math.max(8, Math.min(22, Math.floor(usuario.password.length / 4))) / 2
+                    const row = document.createElement('tr');
+                    const passwordLength = Math.max(8, Math.min(22, Math.floor(usuario.password.length / 4))) / 2;
 
-                    const row = document.createElement('tr')
-                    const td1 = document.createElement('td')
-                    const td2 = document.createElement('td')
-                    const td3 = document.createElement('td')
-                    const td4 = document.createElement('td')
-                    const td5 = document.createElement('td')
+                    const cells = Array.from({ length: 5 }, () => document.createElement('td'));
 
-                    td1.textContent = index + 1
-                    td2.textContent = usuario.id
-                    td3.textContent = usuario.nombre
+                    cells[0].textContent = index + 1;
+                    cells[1].textContent = usuario.id;
+                    cells[2].textContent = usuario.nombre;
 
-                    const password = document.createElement('span')
-                    password.className = "password-mask"
-                    password.dataset.originalLength = originalPasswordLength
-                    password.textContent = "*".repeat(originalPasswordLength)
+                    const passwordSpan = document.createElement('span');
+                    passwordSpan.className = "password-mask";
+                    passwordSpan.dataset.originalLength = passwordLength;
+                    passwordSpan.textContent = "*".repeat(passwordLength);
 
-                    const eye_btn = document.createElement('button')
-                    eye_btn.id = "btn-eye"
-                    eye_btn.className = "btn"
-                    eye_btn.dataset.id = usuario.id
-                    eye_btn.dataset.visible = "false"
-                    eye_btn.dataset.timeout = ""
-                    eye_btn.textContent = "👁️"
+                    const eyeBtn = document.createElement('button');
+                    eyeBtn.id = "btn-eye";
+                    eyeBtn.className = "btn";
+                    eyeBtn.dataset.id = usuario.id;
+                    eyeBtn.dataset.visible = "false";
+                    eyeBtn.dataset.timeout = "";
+                    eyeBtn.textContent = "👁️";
 
-                    td4.appendChild(password)
-                    td4.appendChild(eye_btn)
+                    cells[3].append(passwordSpan, eyeBtn)
 
-                    const edt_btn = document.createElement('button')
-                    edt_btn.id = "btn-edt"
-                    edt_btn.className = "btn"
-                    edt_btn.dataset.id = usuario.id
-                    edt_btn.textContent = "✏️"
+                    const edtBtn = document.createElement('button');
+                    edtBtn.id = "btn-edt";
+                    edtBtn.className = "btn";
+                    edtBtn.dataset.id = usuario.id;
+                    edtBtn.textContent = "✏️";
 
-                    const del_btn = document.createElement('button')
-                    del_btn.id = "btn-del"
-                    del_btn.className = "btn"
-                    del_btn.dataset.id = usuario.id
-                    del_btn.textContent = "🗑️"
+                    const delBtn = document.createElement('button');
+                    delBtn.id = "btn-del";
+                    delBtn.className = "btn";
+                    delBtn.dataset.id = usuario.id;
+                    delBtn.textContent = "🗑️";
 
-                    td5.appendChild(edt_btn)
-                    td5.appendChild(del_btn)
+                    cells[4].append(edtBtn, delBtn)
 
-                    row.appendChild(td1)
-                    row.appendChild(td2)
-                    row.appendChild(td3)
-                    row.appendChild(td4)
-                    row.appendChild(td5)
 
+                    row.append(...cells);
                     userTableBody.appendChild(row)
                 });
             }
         }).catch(error => {
-            console.error("Error verificando sesión:", error);
+            console.error("Error cargando usuarios", error);
             window.location.href = "/login";
         });
     }
 
+    // Verificar si se activo la sesion
     fetch("/api/session", {
         method: "GET",
         credentials: "include",
-    }).then(response => response.json()).then(data => {
+    }).then(response => {
+        if (!response.ok) throw new Error("Fallo el checado de sesión");
+        return response.json()
+    }).then(data => {
         if (!data.success) {
             // Si no hay sesión activa se redirige al login
             window.location.href = "/login";
-        } else {
-            // Actualiza informacion del usuario
-            if (userAvatar && data.usuario) {
-                userAvatar.textContent = data.usuario.nombre.charAt(0).toUpperCase();
-            }
-
-            cargarUsuarios()
         }
+
+        // Actualiza informacion del usuario
+        if (userAvatar && data.usuario) {
+            userAvatar.textContent = data.usuario.nombre.charAt(0).toUpperCase();
+        }
+
+        cargarUsuarios()
     }).catch(error => {
         console.error("Error verificando sesión:", error);
         window.location.href = "/login";
     });
 
-    document.getElementById("newUserLink").addEventListener("click", function() {
+    newUserLink.addEventListener("click", function() {
         fetch("/api/session", {
             method: "GET",
             credentials: "include"
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
-                window.location.href = "/create-user"
-            } else {
-                alert(data.message)
-            }
+        }).then(response => {
+            if (!response.ok) throw new Error("Fallo el checado de sesión");
+            return response.json();
+        }).then(data => {
+            window.location.href = data.success ? "/create-user" : "/login";
         }).catch(error => {
             console.error("Error verificando sesión:", error);
             window.location.href = "/login";
@@ -110,18 +115,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Función de termino de sesión
     // Se ejecuta al hacer clic en el botón de cerrar sesión
-    document.getElementById("logoutBtn").addEventListener("click", function() {
+    logoutBtn.addEventListener("click", function() {
         fetch('/api/logout', {
             method: "POST",
             credentials: "include"
-        }).then(response => response.json()).then(data => {
-            if (data.success) {
-                window.location.href = "/login";
-            } else {
-                alert("No se pudo cerrar la sesión");
-            }
+        }).then(response => {
+            if (!response.ok) throw new Error("Fallo el cierre de sesión");
+            return response.json();
+        }).then(data => {
+            window.location.href = data.success ? "/login" : window.location.href;
         }).catch(error => {
-            console.error("Error:", error);
+            console.error("Error al cerrar session:", error);
             alert("Ocurrio un error al cerrar la sesión");
         });
     });
@@ -133,8 +137,7 @@ document.addEventListener("DOMContentLoaded", function() {
             const userId = e.target.dataset.id;
             const passwordSpan = e.target.previousElementSibling;
             const isVisible = btn.dataset.visible === 'true';
-            const originalLength = parseInt(passwordSpan.dataset.originalLength)
-            let timeoutID;
+            const originalLength = parseInt(passwordSpan.dataset.originalLength, 10)
 
             try {
                 if (!isVisible) {
@@ -146,42 +149,34 @@ document.addEventListener("DOMContentLoaded", function() {
                         credentials: "include"
                     });
 
-                    const data = await response.json()
+                    if (!response.ok) throw new Error("Fallo el mostrado de la contraseña");
+                    const data = await response.json();
 
-                    if (data.success) {
-                        passwordSpan.textContent = data.password;
-                        btn.textContent = "🔒";
-                        btn.dataset.visible = 'true';
+                    passwordSpan.textContent = data.password;
+                    btn.textContent = "🔒";
+                    btn.dataset.visible = 'true';
 
-                        timeoutID = setTimeout(() => {
-                            passwordSpan.textContent = "*".repeat(originalLength);
-                            btn.textContent = "👁️";
-                            btn.dataset.visible = 'false';
-                        }, 30000);
-                    } else {
-                        alert('Error: ' + data.message);
-                        btn.textContent = '👁️';
-                        btn.disabled = false;
-                    }
+                    const timeoutID = setTimeout(() => {
+                        passwordSpan.textContent = "*".repeat(originalLength);
+                        btn.textContent = "👁️";
+                        btn.dataset.visible = 'false';
+                    }, 30000);
+
+                    btn.dataset.timeout = timeoutID;
                 } else {
+                    clearTimeout(Number(btn.dataset.timeout));
                     passwordSpan.textContent = '*'.repeat(originalLength);
                     btn.textContent = '👁️';
                     btn.dataset.visible = 'false';
-                    clearTimeout(timeoutID);
                 }
-            } catch (err) {
-                console.error("Decrypt error:", err)
-                btn.textContent = '👁️';
-                btn.disabled = false;
+            } catch (error) {
+                console.error("Decrypt error:", error)
+                alert("Error al mostrar la contraseña")
             } finally {
                 btn.disabled = false;
-
-                if (timeoutID) btn.dataset.timeout = timeoutID;
             }
         }
     });
 
-    window.addEventListener('focus', function() {
-        cargarUsuarios()
-    })
+    window.addEventListener('focus', cargarUsuarios);
 });
