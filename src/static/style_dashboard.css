@@ -252,7 +252,9 @@ footer {
 }
 */
 
-.btn-eye {
+.btn {
+    font-size: 18px;
+    padding-left: 20px;
     background-color: transparent;
     background-repeat: no-repeat;
     border: none;

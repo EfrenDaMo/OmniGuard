@@ -3,7 +3,7 @@ from modules.config import Configuracion
 from modules.models import Usuario
 from modules.database import BasedeDatos
 from modules.user_service import ServicioUsuario
-from cryptography.fernet import Fernet, InvalidToken
+from cryptography.fernet import Fernet
 
 
 class ServicioAutentificacion:
@@ -20,7 +20,7 @@ class ServicioAutentificacion:
         usuario_existente = self.servicio_usuario.obtener_usuarios_con_nombre(nombre)
 
         if usuario_existente:
-            return {"success": True, "message": "El usuario ya existe"}
+            return {"success": False, "message": "El usuario ya existe"}
 
         password_encryptado = self.cypher.encrypt(password.encode()).decode()
 
