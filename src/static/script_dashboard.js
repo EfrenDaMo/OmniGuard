@@ -40,8 +40,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     passwordSpan.textContent = "*".repeat(passwordLength);
 
                     const eyeBtn = document.createElement('button');
-                    eyeBtn.id = "btn-eye";
-                    eyeBtn.className = "btn";
+                    eyeBtn.className = "btn btn-eye";
                     eyeBtn.dataset.id = usuario.id;
                     eyeBtn.dataset.visible = "false";
                     eyeBtn.dataset.timeout = "";
@@ -49,20 +48,17 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     cells[3].append(passwordSpan, eyeBtn)
 
-                    const edtBtn = document.createElement('button');
-                    edtBtn.id = "btn-edt";
-                    edtBtn.className = "btn";
-                    edtBtn.dataset.id = usuario.id;
+                    const edtBtn = document.createElement('a');
+                    edtBtn.className = "btn btn-edt";
+                    edtBtn.href = `/edit-user?id=${usuario.id}`;
                     edtBtn.textContent = "✏️";
 
                     const delBtn = document.createElement('button');
-                    delBtn.id = "btn-del";
-                    delBtn.className = "btn";
+                    delBtn.className = "btn btn-del";
                     delBtn.dataset.id = usuario.id;
                     delBtn.textContent = "🗑️";
 
                     cells[4].append(edtBtn, delBtn)
-
 
                     row.append(...cells);
                     userTableBody.appendChild(row)
@@ -132,7 +128,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 
     document.addEventListener('click', async (e) => {
-        if (e.target.id === 'btn-eye') {
+        if (e.target.classList.contains('btn-eye')) {
             const btn = e.target;
             const userId = e.target.dataset.id;
             const passwordSpan = e.target.previousElementSibling;
@@ -174,6 +170,32 @@ document.addEventListener("DOMContentLoaded", function() {
                 alert("Error al mostrar la contraseña")
             } finally {
                 btn.disabled = false;
+            }
+        }
+    });
+
+    document.addEventListener('click', async (e) => {
+        if (e.target.classList.contains('btn-del')) {
+            const userId = e.target.dataset.id;
+            const confirmed = confirm(`¿Estás seguro que deseas eliminar este usuario (ID: ${userId})?`);
+
+            if (confirmed) {
+                try {
+                    const response = await fetch(`/api/users/delete/${userId}`, {
+                        method: 'DELETE',
+                        credentials: 'include'
+                    });
+
+                    if (!response.ok) throw new Error('Delete failed');
+
+                    const data = await response.json();
+                    if (data.success) {
+                        cargarUsuarios(); // Refresh user list
+                    }
+                } catch (error) {
+                    console.error("Delete error:", error);
+                    alert("Error al eliminar usuario");
+                }
             }
         }
     });

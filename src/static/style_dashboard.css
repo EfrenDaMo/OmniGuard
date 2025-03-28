@@ -37,6 +37,10 @@ body {
     padding: 2rem;
 }
 
+a {
+    text-decoration: none;
+}
+
 /* Estilos del contenedor principal */
 .dashboard {
     max-width: 1200px;

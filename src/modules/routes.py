@@ -90,6 +90,25 @@ def create_user():
     return render_template("create-user.html", titulo="Usuario Nuevo")
 
 
+@omni_bp.route("/edit-user")
+@require_login
+def edit_user():
+    """Muestra el formulario de creación de usuarios.
+
+    Requisitos:
+        - Sesión activa con privilegios de administrador
+
+    Retorna:
+        render_template: Template HTML con el formulario
+
+    Errores:
+        401: Si no hay sesión activa
+        403: Si el usuario no tiene permisos suficientes
+    """
+    logs.info("Pagina editar usuario fue accedida")
+    return render_template("edit-user.html", titulo="Editar Usuario")
+
+
 @omni_bp.route("/static/<path:filename>")
 def serve_static(filename: str):
     """Sirve archivos estáticos del sistema.
