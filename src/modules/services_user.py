@@ -16,12 +16,12 @@ class ServicioUsuario:
         }
         self.bd.crear("usuario", datos_usuario)
 
-    def obtener_usuarios(self) -> list[Usuario] | None:
+    def obtener_usuarios(self) -> list[Usuario]:
         """Obtiene todos los usuarios."""
         resultados = self.bd.leer("usuario")
 
         if not resultados:
-            return None
+            return []
 
         usuarios: list[Usuario] = []
 
@@ -35,7 +35,7 @@ class ServicioUsuario:
                     )
                 )
 
-        return usuarios or None
+        return usuarios or []
 
     def obtener_usuarios_con_nombre(self, nombre: str) -> Usuario | None:
         """Obtiene un usario por su nombre."""

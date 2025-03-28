@@ -2,6 +2,7 @@ from functools import wraps
 from flask import (
     Blueprint,
     current_app,
+    jsonify,
     redirect,
     render_template,
     send_from_directory,
@@ -15,12 +16,13 @@ omni_bp = Blueprint("omni", __name__, template_folder="../templates/")
 def require_login(func):
     """Decorador para requerir autenticación."""
 
+    @wraps(func)
     def wrapper(*args, **kwargs):
         if "usuario_id" not in session:
-            return redirect(url_for("omni.login"))
+            # return redirect(url_for("omni.login"))
+            return jsonify({"success": False, "message": "No autorizado"}), 401
         return func(*args, **kwargs)
 
-    wrapper.__name__ = func.__name__
     return wrapper
 
 

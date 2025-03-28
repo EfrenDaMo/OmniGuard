@@ -1,6 +1,7 @@
 from flask import Blueprint, jsonify, session
 
 from modules.database import BasedeDatos
+from modules.routes import require_login
 from modules.services_auth import ServicioAutenticacion
 
 
@@ -11,6 +12,7 @@ serv_auth = ServicioAutenticacion(bd)
 
 
 @usuarios_bp.route("/api/users", methods=["GET"])
+@require_login
 def obtener_usuarios():
     """Endpoint para obtener todos los usuarios."""
     if "usuario_id" not in session:
@@ -32,10 +34,11 @@ def obtener_usuarios():
 
 
 @usuarios_bp.route("/api/users/decrypt-password/<int:id_usuario>", methods=["POST"])
+@require_login
 def desencriptar_password(id_usuario: int):
     """Endpoint para desencriptar contraseña"""
     if "usuario_id" not in session:
-        return jsonify({"success": False, "messages": "No autorizado"}), 401
+        return jsonify({"success": False, "message": "No autorizado"}), 401
 
     try:
         usuarios = serv_auth.obtener_datos_del_usuario()
@@ -50,7 +53,7 @@ def desencriptar_password(id_usuario: int):
         )
 
         if not usuario_clave:
-            return jsonify({"success": False, "messages": "Usuario no encotrado"}), 404
+            return jsonify({"success": False, "message": "Usuario no encotrado"}), 404
 
         decriptado = serv_auth.decriptar_password(str(usuario_clave["password"]))
         return jsonify({"success": True, "password": decriptado})
