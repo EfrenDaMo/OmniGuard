@@ -1,8 +1,8 @@
 from flask import Blueprint, jsonify, request
 
-from app import Applicacion
-from modules.database import BasedeDatos
 from modules.logging import Logs
+from modules.limiter import limiter
+from modules.database import BasedeDatos
 from modules.services_auth import ServicioAutenticacion
 
 
@@ -60,7 +60,7 @@ def registro():
 
 
 @auth_bp.route("/api/login", methods=["POST"])
-@Applicacion().limiter.limit("5 per minute")
+@limiter.limit("5 per minute")
 def login():
     """Endpoint para autenticación de usuarios.
 
