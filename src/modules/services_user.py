@@ -19,7 +19,7 @@ class ServicioUsuario:
             "password": usuario.password,
         }
         self.bd.crear("usuario", datos_usuario)
-        self.__logs.info("Se creo el usario exitosamente", id=usuario.id)
+        self.__logs.info("Se creo el usuario exitosamente", id=usuario.id)
 
     def obtener_usuarios(self) -> list[Usuario]:
         """Obtiene todos los usuarios."""
@@ -42,11 +42,11 @@ class ServicioUsuario:
                     )
                 )
 
-        self.__logs.info("Se obtubieron exitosamente los usuarios")
+        self.__logs.info("Se obtuvieron exitosamente los usuarios")
         return usuarios or []
 
     def obtener_usuarios_con_nombre(self, nombre: str) -> Usuario | None:
-        """Obtiene un usario por su nombre."""
+        """Obtiene un usuario por su nombre."""
         self.__logs.info("Se esta consiguiendo el usuario", nombre=nombre)
         resultados = self.bd.leer("usuario", {"nombre": nombre})
 
@@ -71,10 +71,10 @@ class ServicioUsuario:
         self, nombre: str, datos_actualizados: dict[str, str]
     ) -> int:
         """Actualiza un usuario existente."""
-        self.__logs.info("Se logro actualizar el usario", nombre=nombre)
+        self.__logs.info("Se logro actualizar el usuario", nombre=nombre)
         return self.bd.actualizar("usuario", datos_actualizados, {"nombre": nombre})
 
     def borrar_usuario(self, nombre: str) -> int:
         """Elimina un usuario existente."""
-        self.__logs.info("Se logro eliminar el usario", nombre=nombre)
+        self.__logs.info("Se logro eliminar el usuario", nombre=nombre)
         return self.bd.eliminar("usuario", {"nombre": nombre})

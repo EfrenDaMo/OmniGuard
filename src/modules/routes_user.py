@@ -14,7 +14,7 @@ serv_auth = ServicioAutenticacion(bd)
 logs = Logs()
 
 
-@usuarios_bp.route("/api/users", methods=["POST"])
+@usuarios_bp.route("/api/users", methods=["GET"])
 @require_login
 def obtener_usuarios():
     """Endpoint para obtener todos los usuarios."""

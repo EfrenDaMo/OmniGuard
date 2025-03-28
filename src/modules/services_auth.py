@@ -100,7 +100,7 @@ class ServicioAutenticacion:
             }
             datos_usaurios.append(datos_usaurio)
 
-        self.__logs.info("Se obtubieron los datos de los usuarios")
+        self.__logs.info("Se obtuvieron los datos de los usuarios")
         return datos_usaurios
 
     def descifrar_password(self, password_encriptado: str) -> str:

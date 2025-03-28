@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Se asegura que ciertas cosas pasen solo si se puede verificar la sesión
     function cargarUsuarios() {
         fetch(`/api/users?timestamp=${Date.now()}`, {
-            method: "POST",
+            method: "GET",
             credentials: "include"
         }).then(response => {
             if (!response.ok) throw new Error("HTTP error " + response.status);
@@ -145,7 +145,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     btn.textContent = '...';
 
                     const response = await fetch(`/api/users/decrypt-password/${userId}`, {
-                        method: "POST",
+                        method: "GET",
                         credentials: "include"
                     });
 
