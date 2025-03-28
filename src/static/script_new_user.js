@@ -1,3 +1,25 @@
+/**
+ * Actualización de Datos de Usuario
+ * 
+ * Gestiona la modificación de usuarios existentes permitiendo:
+ * - Carga inicial de datos desde API (/api/users)
+ * - Actualización parcial (nombre o contraseña)
+ * - Integración con endpoint POST /api/registro
+ * 
+ * Args:
+ *   userId (string): ID obtenido de parámetro URL (?id=)
+ *   updateData (object): Datos para actualizar {nombre_actual, nuevo_nombre, nueva_password}
+ * 
+ * Raises:
+ *   Error: Si usuario no existe o falla conexión con API
+ * 
+ * Ejemplo:
+ *   // Actualización solo de nombre
+ *   fetch("/api/users/update", {
+ *     method: "PUT",
+ *     body: JSON.stringify({ nombre_actual: "Ana", nuevo_nombre: "Ana López" })
+ *   });
+ */
 // Sirve para validar el formulario de creación de usuario
 document.addEventListener('DOMContentLoaded', function() {
     // Obtener elementos del DOM

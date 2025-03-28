@@ -1,3 +1,27 @@
+/**
+ * Autenticación de Usuarios con reCAPTCHA
+ * 
+ * Controla el proceso de login con:
+ * - Validación de campos obligatorios
+ * - Integración con reCAPTCHA v2/v3
+ * - Comunicación con API (/api/login)
+ * - Redirección automática a dashboard
+ * 
+ * Args:
+ *   recaptchaResponse (string): Token generado por widget reCAPTCHA
+ * 
+ * Raises:
+ *   Error: Si reCAPTCHA no está cargado o respuesta es inválida
+ *   Error: Si API retorna success=false
+ * 
+ * Ejemplo:
+ *   // Flujo de autenticación exitoso
+ *   grecaptcha.execute();
+ *   fetch("/api/login", {
+ *     method: "POST",
+ *     body: JSON.stringify({ nombre: "admin", password: "admin", recaptcha: "token" })
+ *   });
+ */
 // Espera a que el contenido del DOM se cargue por completo
 document.addEventListener("DOMContentLoaded", function() {
     // Se obtiene los campos de la pagina

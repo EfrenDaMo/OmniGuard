@@ -1,3 +1,26 @@
+/**
+ * Gestión del Dashboard de Usuarios
+ * 
+ * Maneja la carga y gestión del dashboard después de verificar la sesión del usuario.
+ * Incluye renderizado dinámico de la tabla de usuarios, control de eventos para
+ * edición/eliminación, visualización temporal de contraseñas y sincronización con APIs.
+ * Desenmascara la contraseña temporalmente (30 segundos).
+ * 
+ * Raises:
+ *   Error: Si fallan solicitudes a APIs (/api/users, /api/session, /api/logout)
+ *   Error: Redirige a /login si no hay sesión activa o hay errores críticos
+ * 
+ * Ejemplo:
+ *   // Carga inicial al detectar sesión válida
+ *   fetch("/api/session", { method: "POST" })
+ *  .then(response => {
+ *       if (response.ok) cargarUsuarios();
+ *   });
+ *
+ * Nota de Seguridad: 
+ *   - Este endpoint (/api/users/decrypt-password) DEBE estar restringido a roles administrativos.
+ *   - Registrar todas las solicitudes en un log de auditoría.
+ */
 // Espera a que el contenido del DOM se cargue por completo
 document.addEventListener("DOMContentLoaded", function() {
     // Obtener elementos de la pagina
