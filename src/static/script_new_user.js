@@ -1,47 +1,100 @@
-//sirve para validar el formulario de creación de usuario
-document.addEventListener('DOMContentLoaded', function() { 
+/**
+ * Actualización de Datos de Usuario
+ * 
+ * Gestiona la modificación de usuarios existentes permitiendo:
+ * - Carga inicial de datos desde API (/api/users)
+ * - Actualización parcial (nombre o contraseña)
+ * - Integración con endpoint POST /api/registro
+ * 
+ * Args:
+ *   userId (string): ID obtenido de parámetro URL (?id=)
+ *   updateData (object): Datos para actualizar {nombre_actual, nuevo_nombre, nueva_password}
+ * 
+ * Raises:
+ *   Error: Si usuario no existe o falla conexión con API
+ * 
+ * Ejemplo:
+ *   // Actualización solo de nombre
+ *   fetch("/api/users/update", {
+ *     method: "PUT",
+ *     body: JSON.stringify({ nombre_actual: "Ana", nuevo_nombre: "Ana López" })
+ *   });
+ */
+// Sirve para validar el formulario de creación de usuario
+document.addEventListener('DOMContentLoaded', function() {
+    // Obtener elementos del DOM
     const form = document.getElementById('userForm'); //formulario
     const fullnameInput = document.getElementById('fullname'); //nombre
     const passwordInput = document.getElementById('password'); //contraseña
     const passwordError = document.getElementById('passwordError'); //error de contraseña
     const successMessage = document.getElementById('successMessage'); //mensaje de éxito
 
+    // Validar elementos esenciales
+    if (!form || !fullnameInput || !passwordInput || !passwordError || !successMessage) {
+        console.error("Elementos esenciales faltantes en el formulario");
+        return;
+    }
+
     // Validación de contraseña
     passwordInput.addEventListener('input', function() {
-        if (passwordInput.value.length >= 8) {
-            passwordError.style.display = 'none';
-            passwordInput.style.borderColor = 'var(--success-color)';
-        } else {
-            passwordError.style.display = 'block';
-            passwordInput.style.borderColor = 'var(--error-color)';
-        }
+        const isValid = passwordInput.value.length >= 8;
+
+        passwordError.style.display = isValid ? 'none' : 'block';
+        passwordInput.style.borderColor = isValid ? 'var(--success-color)' : 'var(--error-color)';
     });
 
     // Envío del formulario
     form.addEventListener('submit', function(e) {
         e.preventDefault();
-        
+
         // Validación final
-        if (passwordInput.value.length < 8) {
-            passwordError.style.display = 'block';
-            passwordInput.style.borderColor = 'var(--error-color)';
-            passwordInput.focus();
+        if (!fullnameInput.value.trim() || passwordInput.value.length < 8) {
+            if (!fullnameInput.value.trim()) {
+                fullnameInput.style.borderColor = 'var(--error-color)';
+                fullnameInput.focus();
+            }
+            if (passwordInput.value.length < 8) {
+                passwordError.style.display = 'block';
+                passwordInput.style.borderColor = 'var(--error-color)';
+                passwordInput.focus();
+            }
             return;
         }
-        
-        // Aca enviar los datos al servidor
-        console.log('Usuario creado:', {
-            nombre: fullnameInput.value,
-            password: passwordInput.value
-        });
-        
-        // Mostrar mensaje de éxito
-        form.style.display = 'none'; //ocultar formulario
-        successMessage.style.display = 'block'; //mostrar mensaje de éxito
 
-        // Limpiar campos del formulario
-        fullnameInput.value = '';
-        passwordInput.value = '';
-        
+        // Enviar los datos al servidor
+        fetch("/api/registro", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            credentials: "include",
+            body: JSON.stringify({
+                nombre: fullnameInput.value,
+                password: passwordInput.value,
+            }),
+        }).then(response => {
+            if (!response.ok) throw new Error(`HTTP ${response.status}`);;
+            return response.json();
+        }).then(data => {
+            if (data.success) {
+                form.style.display = 'none'; //ocultar formulario
+                successMessage.style.display = 'block'; //mostrar mensaje de éxito
+
+                const redirectMsg = document.createElement('p');
+                redirectMsg.textContent = "Serás redirigido al dashboard en 5 segundos...";
+
+                successMessage.appendChild(redirectMsg);
+
+                // Limpiar campos del formulario
+                form.reset();
+
+                setTimeout(() => {
+                    window.location.href = `/dashboard?timestamp=${Date.now()}`;
+                }, 5000);
+            } else {
+                alert(data.message || "Error al crear el usuario");
+            }
+        }).catch(error => {
+            console.error("Error:", error);
+            alert("Ocurrió un error al crear el usuario")
+        });
     });
 });

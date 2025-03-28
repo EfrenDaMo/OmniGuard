@@ -3,7 +3,7 @@
 
 {# Importa CSS relevante a la pagina #}
 {% block importes %}
-<link rel="stylesheet" href="../static/style_dashboard.css">
+<link rel="stylesheet" href="/static/style_dashboard.css">
 {% endblock %}
 
 
@@ -13,90 +13,73 @@
 <div class="dashboard">
     <!-- Encabezado -->
     <div class="header">
-        <h1>Mi Cuenta OmniGuard</h1>
+        <div>
+            <h1>Mi Cuenta OmniGuard</h1>
+            <h2>Bienvenido, {{nombre}}!</h2>
+        </div>
 
         <!-- Información del usuario -->
         <div class="user-info">
             <div class="avatar" id="userAvatar">XD</div>
+            <a class="back-link" id="newUserLink">Crear nuevo usuario</a>
             <button class="logout-btn" id="logoutBtn">Cerrar Sesión</button>
         </div>
     </div>
-            
-            <!-- Contenedor de tarjetas -->
-            <div class="cards-container">
-                
-                <!-- Tarjetas -->
-                <div class="card">
-                    <h3>Resumen</h3>
-                    <p>
-                        Bienvenido a tu panel de control. Es una prueba de mis habilidades XD. 
-                        Asi que no te emociones
-                    </p>
-                </div>
-                
-                <div class="card">
-                    <h3>Actividad Reciente</h3>
-                    <p>No hay actividad reciente para mostrar.</p>
-                </div>
-                
-                <div class="card">
-                    <h3>Notificaciones</h3>
-                    <p>No hay estas solo 😔</p>
-                </div>
-                
-                <div class="card">
-                    <h3>Configuración</h3>
-                    <p>
-                        Personaliza tu experiencia de usuario, 
-                        como si no tuvieras otra mejor cosa que hacer en tu vida XD
-                    </p>
-                </div>
-        </div>
-        
-        <!-- Contenedor de la tabla -->
-        <div class="table-container">
-            <h2>Usuarios del Sistema (Prueba)</h2>
-            <table class="tabla-datos">
-              
-                <!-- Encabezado de la tabla -->
-                <thead>
-                    <tr>
-                        <th>ID</th>
-                        <th>Nombre</th>
-                        <th>Contraseña</th>
-                    </tr>
-                </thead>
-                
-                <!-- Cuerpo de la tabla -->
-                <!-- Aquí se pueden agregar más filas según sea necesario -->
-                <tbody>
-                    <tr>
-                        <td>001</td>
-                        <td>Juan Pérez</td>
-                        <td class="contrasena">••••••••</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>002</td>
-                        <td>María García</td>
-                        <td class="contrasena">••••••••</td>
-                    </tr>
-                    
-                    <tr>
-                        <td>003</td>
-                        <td>Carlos López</td>
-                        <td class="contrasena">••••••••</td>
-                    </tr>
 
-                    
-                    <tr>
-                        <td>004</td>
-                        <td>Ana Rodríguez</td>
-                        <td class="contrasena">••••••••</td>
-                    </tr>
-                </tbody>
-            </table>
+    <!-- Contenedor de tarjetas -->
+    <div class="cards-container">
+
+        <!-- Tarjetas -->
+        <div class="card">
+            <h3>Resumen</h3>
+            <p>
+                Bienvenido a tu panel de control. Es una prueba de mis habilidades XD.
+                Asi que no te emociones
+            </p>
         </div>
-        
-<script src="../static/scripts_dashboard.js"></script>
+
+        <div class="card">
+            <h3>Actividad Reciente</h3>
+            <p>No hay actividad reciente para mostrar.</p>
+        </div>
+
+        <div class="card">
+            <h3>Notificaciones</h3>
+            <p>No hay estas solo 😔</p>
+        </div>
+
+        <div class="card">
+            <h3>Configuración</h3>
+            <p>
+                Personaliza tu experiencia de usuario,
+                como si no tuvieras otra mejor cosa que hacer en tu vida XD
+            </p>
+        </div>
+    </div>
+
+    <!-- Contenedor de la tabla -->
+    <div class="table-container">
+        <h2>Usuarios del Sistema: </h2>
+        <table class="tabla-datos">
+
+            <!-- Encabezado de la tabla -->
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Contraseña</th>
+                    <th>Opciones</th>
+                </tr>
+            </thead>
+
+            <!-- Cuerpo de la tabla -->
+            <!-- Este se llena dinamicamente con los registros de la base de datos -->
+            <tbody id="userTableBody">
+            </tbody>
+        </table>
+    </div>
+
+    <script type="module" src="{{ url_for('static', filename='script_dashboard.js') }}"></script>
+</div>
 {% endblock %}

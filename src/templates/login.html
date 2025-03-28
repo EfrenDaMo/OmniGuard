@@ -3,7 +3,7 @@
 
 {# Importa CSS relevante a la pagina #}
 {% block importes %}
-<link rel="stylesheet" href="../static/style_login.css">
+<link rel="stylesheet" href="/static/style_login.css">
 {% endblock %}
 
 {# Inserta el contenido de la pagina #}
@@ -15,7 +15,7 @@
     <!-- Formulario de inicio de sesión -->
     <div class="input-group">
         <label for="name">Nombre</label>
-        <input type="name" id="name" placeholder="Ingresa tu nombre de usuario">
+        <input type="text" id="name" placeholder="Ingresa tu nombre de usuario" required>
     </div>
 
     <!-- Campo de contraseña -->
@@ -40,7 +40,7 @@
 </div>
 
 <!-- Script de Login-->
-<script src="../static/scripts_login.js"></script>
+<script type="module" src="{{ url_for('static', filename='script_login.js') }}"></script>
 
 <!-- Script de reCAPTCHA -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>
