@@ -3,6 +3,7 @@ from flask_cors import CORS
 
 from modules.config import Configuracion
 
+from modules.logging import Logs
 from modules.routes import omni_bp
 from modules.routes_auth import auth_bp
 from modules.routes_user import usuarios_bp
@@ -19,6 +20,11 @@ class Applicacion:
         self.__config: dict[str, str | bool | int] = (
             Configuracion().obtener_config_app()
         )
+
+        # Inicializar el logger
+        self.logger: Logs = Logs()
+        self.logger.info("Applicación Inicializada")
+
         # Inicializa la applicación como un objeto con una sub ruta estatica
         self.flask_app: Flask = Flask(__name__, static_folder="static")
 
@@ -44,9 +50,15 @@ class Applicacion:
 
         @self.flask_app.errorhandler(500)
         def manejar_500(_):
+            self.logger.critical("Error interno de servidor", stack_info=True)
             return jsonify({"success": False, "message": "Error interno de servidor"})
 
     def ejecutar(self) -> None:
+        self.logger.info(
+            "Iniciando el servidor de applicación",
+            host=self.__config["Host"],
+            port=self.__config["Port"],
+        )
         """Ejecuta la applicación"""
         self.flask_app.run(
             host=str(self.__config["Host"]), port=int(self.__config["Port"])

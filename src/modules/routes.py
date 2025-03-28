@@ -1,3 +1,4 @@
+from modules.logging import Logs
 from functools import wraps
 from flask import (
     Blueprint,
@@ -12,6 +13,8 @@ from flask import (
 
 omni_bp = Blueprint("omni", __name__, template_folder="../templates/")
 
+logs = Logs()
+
 
 def require_login(func):
     """Decorador para requerir autenticación."""
@@ -19,7 +22,6 @@ def require_login(func):
     @wraps(func)
     def wrapper(*args, **kwargs):
         if "usuario_id" not in session:
-            # return redirect(url_for("omni.login"))
             return jsonify({"success": False, "message": "No autorizado"}), 401
         return func(*args, **kwargs)
 
@@ -29,13 +31,14 @@ def require_login(func):
 @omni_bp.route("/")
 def home():
     """Redirige inmediatamente a la página de login."""
-    # TODO: Implementa sistema de sesion duradera y redirigir a dashboard si esta activa
+    logs.info("Se redirecciono al usuario a la pagina login")
     return redirect(url_for("omni.login"))
 
 
 @omni_bp.route("/login")
 def login():
     """Muestra la página de login."""
+    logs.info("Pagina Login fue accedida")
     return render_template("login.html", titulo="Login")
 
 
@@ -43,6 +46,10 @@ def login():
 @require_login
 def dashboard():
     """Muestra el dashboard principal."""
+    logs.info(
+        "Pagina dashboard fue accedida por el usuario",
+        user_id=session.get("usuario_id"),
+    )
     nombre_usuario = session.get("usuario_nombre", "Usuario")
     return render_template("dashboard.html", titulo="Dashboard", nombre=nombre_usuario)
 
@@ -51,12 +58,14 @@ def dashboard():
 @require_login
 def create_user():
     """Muestra la página de creación de usuarios."""
+    logs.info("Pagina crear usuario fue accedida")
     return render_template("create-user.html", titulo="Usuario Nuevo")
 
 
 @omni_bp.route("/static/<path:filename>")
 def serve_static(filename: str):
     """Sirve archivos estáticos con tipo MIME adecuado"""
+    logs.info("Se sirvio un script estatico")
     mimetype = "application/javascript" if filename.endswith(".js") else None
     return send_from_directory(
         directory=str(current_app.static_folder),

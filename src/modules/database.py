@@ -5,12 +5,15 @@ from mysql.connector.types import RowItemType, RowType
 from modules.config import Configuracion
 from mysql.connector.abstracts import MySQLConnectionAbstract, MySQLCursorAbstract
 
+from modules.logging import Logs
+
 
 class BasedeDatos:
     """Maneja la conexión con la Base de Datos implementado los métodos CRUD."""
 
     def __init__(self) -> None:
         """Crea un nuevo objeto de la conexión y la inica."""
+        self.__logs = Logs()
         self.__cursor: MySQLCursorAbstract | None = None
         self.__conexion: MySQLConnectionAbstract | None = None
         self.__config: dict[str, str | int] = Configuracion().obtener_config_bd()
@@ -18,6 +21,7 @@ class BasedeDatos:
     def conectar(self) -> None:
         """Crea una nueva conexión a la base de datos y activa el cursor."""
         try:
+            self.__logs.info("Intentando conectarse a la base de datos")
             conexion = mysql.connector.connect(**self.__config)
             if isinstance(conexion, MySQLConnectionAbstract):
                 self.__conexion = conexion
@@ -26,9 +30,9 @@ class BasedeDatos:
                 _ = self.__conexion.cmd_query(
                     "SET SESSION TRANSACTION ISOLATION LEVEL READ COMMITTED"
                 )
-                print("Conexion Exitosa a la base de datos")
+                self.__logs.info("Conexion Exitosa a la base de datos")
         except mysql.connector.Error as err:
-            print(f"Error al conectarse a la base de datos: {err}")
+            self.__logs.critical(f"Error al conectarse a la base de datos: {err}")
             sys.exit(1)
 
     def desconectar(self) -> None:
@@ -40,6 +44,8 @@ class BasedeDatos:
         if self.__conexion:
             self.__conexion.close()
             self.__conexion = None
+
+        self.__logs.info("Desconexion exitosa.")
 
     def __ejecutar_consulta(
         self,
@@ -62,7 +68,7 @@ class BasedeDatos:
                 else:
                     self.__cursor.execute(consulta)
         except mysql.connector.Error as err:
-            print(f"Error ejecutando consulta: {err}")
+            self.__logs.error(f"Error ejecutando consulta: {err}")
             raise
 
     def crear(self, tabla: str, datos: dict[str, str]) -> None:
@@ -81,9 +87,14 @@ class BasedeDatos:
         try:
             self.__ejecutar_consulta(consulta, valores)
             self.confirmar()
+
+            self.__logs.info("Registro fue creado", tabla=tabla)
         except Exception as err:
             self.revertir()
+            self.__logs.info("Operación de creación fallo", error=str(err))
             raise err
+        finally:
+            self.desconectar()
 
     def leer(
         self,
@@ -99,22 +110,26 @@ class BasedeDatos:
         :param campos: Campos a seleccionar, todos por defecto
         :return: Lista de los registros
         """
-        if isinstance(campos, list):
-            campos = ", ".join(campos)
+        try:
+            if isinstance(campos, list):
+                campos = ", ".join(campos)
 
-        if condiciones:
-            clausula_where = " AND ".join(
-                [f"`{campo}` = %s" for campo in condiciones.keys()]
-            )
-            consulta = f"SELECT {campos} FROM `{tabla}` WHERE {clausula_where}"
-            valores = list(condiciones.values())
+            if condiciones:
+                clausula_where = " AND ".join(
+                    [f"`{campo}` = %s" for campo in condiciones.keys()]
+                )
+                consulta = f"SELECT {campos} FROM `{tabla}` WHERE {clausula_where}"
+                valores = list(condiciones.values())
 
-            self.__ejecutar_consulta(consulta, valores)
-        else:
-            consulta = f"SELECT {campos} FROM `{tabla}`"
-            self.__ejecutar_consulta(consulta)
+                self.__ejecutar_consulta(consulta, valores)
+            else:
+                consulta = f"SELECT {campos} FROM `{tabla}`"
+                self.__ejecutar_consulta(consulta)
 
-        return self.__cursor.fetchall() if self.__cursor else []
+            self.__logs.info("De leyeron los registros", tabla=tabla)
+            return self.__cursor.fetchall() if self.__cursor else []
+        finally:
+            self.desconectar()
 
     def actualizar(
         self,
@@ -140,10 +155,14 @@ class BasedeDatos:
             self.__ejecutar_consulta(consulta, valores)
             self.confirmar()
 
+            self.__logs.info("Se actualizaron registros", tabla=tabla)
             return self.__cursor.rowcount if self.__cursor else 0
         except Exception as err:
             self.revertir()
+            self.__logs.info("Operación de actualización fallo", error=str(err))
             raise err
+        finally:
+            self.desconectar()
 
     def eliminar(self, tabla: str, condiciones: dict[str, str]) -> int:
         """
@@ -162,17 +181,23 @@ class BasedeDatos:
             self.__ejecutar_consulta(consulta, valores)
             self.confirmar()
 
+            self.__logs.info("Se eliminaron registros", tabla=tabla)
             return self.__cursor.rowcount if self.__cursor else 0
         except Exception as err:
             self.revertir()
+            self.__logs.info("Operación de eliminación fallo", error=str(err))
             raise err
+        finally:
+            self.desconectar()
 
     def confirmar(self) -> None:
         """Confirma la transacción actual"""
         if self.__conexion:
             self.__conexion.commit()
+            self.__logs.info("Se confirmo la transacción")
 
     def revertir(self) -> None:
         """Revierte la transacción actual"""
         if self.__conexion:
             self.__conexion.rollback()
+            self.__logs.info("Se revirtio la transacción")

@@ -1,6 +1,7 @@
-from flask import Blueprint, jsonify, session
+from flask import Blueprint, jsonify
 
 from modules.database import BasedeDatos
+from modules.logging import Logs
 from modules.routes import require_login
 from modules.services_auth import ServicioAutenticacion
 
@@ -10,15 +11,17 @@ usuarios_bp = Blueprint("usuarios", __name__)
 bd = BasedeDatos()
 serv_auth = ServicioAutenticacion(bd)
 
+logs = Logs()
 
-@usuarios_bp.route("/api/users", methods=["GET"])
+
+@usuarios_bp.route("/api/users", methods=["POST"])
 @require_login
 def obtener_usuarios():
     """Endpoint para obtener todos los usuarios."""
-    if "usuario_id" not in session:
-        return jsonify({"success": False, "message": "No autorizado"}), 401
+    logs.debug("Peticion para conseguir usuarios")
 
     try:
+        logs.info("Usuarios fueron conseguidos")
         datos_usuarios = serv_auth.obtener_datos_del_usuario()
 
         respuesta = jsonify({"success": True, "usuarios": datos_usuarios})
@@ -30,6 +33,7 @@ def obtener_usuarios():
         return respuesta
 
     except Exception as err:
+        logs.error("Fallo conseguir los usuarios", error=str(err), stack_info=True)
         return jsonify({"success": False, "message": str(err)}), 500
 
 
@@ -37,8 +41,7 @@ def obtener_usuarios():
 @require_login
 def desencriptar_password(id_usuario: int):
     """Endpoint para desencriptar contraseña"""
-    if "usuario_id" not in session:
-        return jsonify({"success": False, "message": "No autorizado"}), 401
+    logs.debug("Peticion para desencriptar la contraseña")
 
     try:
         usuarios = serv_auth.obtener_datos_del_usuario()
@@ -53,10 +56,14 @@ def desencriptar_password(id_usuario: int):
         )
 
         if not usuario_clave:
+            logs.warning("No se encontro el usuario que se buscaba")
             return jsonify({"success": False, "message": "Usuario no encotrado"}), 404
 
-        decriptado = serv_auth.decriptar_password(str(usuario_clave["password"]))
+        decriptado = serv_auth.descifrar_password(str(usuario_clave["password"]))
+
+        logs.info("Se logro conseguir la contraseña desencriptada")
         return jsonify({"success": True, "password": decriptado})
 
     except Exception as err:
+        logs.error("Fallo desencriptar la contraseña", error=str(err), stack_info=True)
         return jsonify({"success": False, "message": str(err)}), 500

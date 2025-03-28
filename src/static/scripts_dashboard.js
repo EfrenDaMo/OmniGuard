@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", function() {
     // Se asegura que ciertas cosas pasen solo si se puede verificar la sesión
     function cargarUsuarios() {
         fetch(`/api/users?timestamp=${Date.now()}`, {
-            method: "GET",
+            method: "POST",
             credentials: "include"
         }).then(response => {
             if (!response.ok) throw new Error("HTTP error " + response.status);
@@ -76,7 +76,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     // Verificar si se activo la sesion
     fetch("/api/session", {
-        method: "GET",
+        method: "POST",
         credentials: "include",
     }).then(response => {
         if (!response.ok) throw new Error("Fallo el checado de sesión");
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     newUserLink.addEventListener("click", function() {
         fetch("/api/session", {
-            method: "GET",
+            method: "POST",
             credentials: "include"
         }).then(response => {
             if (!response.ok) throw new Error("Fallo el checado de sesión");
@@ -125,7 +125,7 @@ document.addEventListener("DOMContentLoaded", function() {
         }).then(data => {
             window.location.href = data.success ? "/login" : window.location.href;
         }).catch(error => {
-            console.error("Error al cerrar session:", error);
+            console.error("Error al cerrar sesión:", error);
             alert("Ocurrio un error al cerrar la sesión");
         });
     });

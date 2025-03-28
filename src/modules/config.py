@@ -23,6 +23,10 @@ class Configuracion:
         self.APP_DEBUG: bool = bool(os.getenv("APP_DEBUG", "False"))
         self.APP_SECRET: str = os.getenv("APP_SECRET", "")
 
+        # Configuración del logger
+        self.LOG_FILE: str = os.getenv("LOG_FILE", "omniguard.log")
+        self.LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
+
     def obtener_config_bd(self) -> dict[str, str | int]:
         """
         Obtiene la configuración de solo la base de datos.
@@ -47,4 +51,14 @@ class Configuracion:
             "Host": self.APP_HOST,
             "Debug": self.APP_DEBUG,
             "Secret": self.APP_SECRET,
+        }
+
+    def obtener_config_log(self) -> dict[str, str]:
+        """
+        Obtiene la configuración de solo el logger.
+        Esto para evitar la interacción con otras configuraciones.
+        """
+        return {
+            "File": self.LOG_FILE,
+            "Level": self.LOG_LEVEL,
         }
