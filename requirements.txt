@@ -1,0 +1,10 @@
+bcrypt==4.3.0
+cryptography==44.0.2
+flask-cors==5.0.1
+Flask-Limiter==3.12
+Flask-Session==0.8.0
+mariadb==1.1.12
+mysql-connector-python==9.2.0
+pipdeptree==2.26.0
+python-dotenv==1.0.1
+requests==2.32.3
