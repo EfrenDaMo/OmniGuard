@@ -10,9 +10,23 @@ from cryptography.fernet import Fernet
 
 
 class ServicioAutenticacion:
-    """Servicio para manejar la autenticación de usuarios"""
+    """Servicio para gestión de autenticación y seguridad.
+
+    Dependencias:
+        - ServicioUsuario: Para operaciones CRUD de usuarios
+        - Fernet: Para cifrado simétrico (debe reemplazarse por hashing)
+
+    Métodos Clave:
+        registrar_usuario(): Crea nuevos usuarios
+        iniciar_sesion(): Maneja el login
+        verificar_sesion(): Comprueba sesión activa
+
+    Attributes:
+        cypher (Fernet): Instancia para cifrado/descifrado
+    """
 
     def __init__(self, bd: BasedeDatos) -> None:
+        """Inicializa el servicio de autenticación con un logger, configuracion y servicio usuario"""
         self.__logs: Logs = Logs()
         self.__logs.debug("Servicio Auth inicializado")
         self.__config = Configuracion().obtener_config_app()
@@ -22,7 +36,26 @@ class ServicioAutenticacion:
         self.cypher: Fernet = Fernet(self.key.encode())
 
     def registrar_usuario(self, nombre: str, password: str) -> dict[str, str | bool]:
-        """Crea el registro de un nuevo usuario"""
+        """Registra un nuevo usuario en el sistema.
+
+        Flujo:
+            1. Verifica si el usuario existe
+            2. Cifra la contraseña
+            3. Crea registro en la base de datos
+
+        Args:
+            nombre (str): Nombre único de usuario
+            password (str): Contraseña en texto plano
+
+        Retorna:
+            dict: Resultado con formato:
+                {"success": bool, "message": str}
+
+        Códigos de estado:
+            201: Registro exitoso
+            400: Datos inválidos
+            409: Usuario ya existe
+        """
         usuario_existente = self.servicio_usuario.obtener_usuarios_con_nombre(nombre)
 
         if usuario_existente:
@@ -40,7 +73,20 @@ class ServicioAutenticacion:
             return {"success": False, "message": str(err)}
 
     def iniciar_sesion(self, nombre: str, password: str) -> dict[str, str | bool]:
-        """Inicia la sesión para un usuario"""
+        """Valida credenciales y establece sesión de usuario.
+
+        Flujo:
+            1. Busca usuario por nombre
+            2. Compara contraseña descifrada
+            3. Establece cookies de sesión
+
+        Args:
+            nombre (str): Nombre de usuario
+            password (str): Contraseña en texto plano
+
+        Retorna:
+            dict: Resultado de la operación con formato estandarizado
+        """
         self.__logs.info("Intento de ingreso", nombre=nombre)
         usuario = self.servicio_usuario.obtener_usuarios_con_nombre(nombre)
 
@@ -61,13 +107,33 @@ class ServicioAutenticacion:
         return {"success": True, "message": "Inicio se sesión exitosa"}
 
     def cerrar_sesion(self) -> dict[str, str | bool]:
-        """Cierra la sesión actual."""
+        """Termina la sesión actual del usuario.
+
+        Acciones:
+            - Limpia todas las variables de sesión
+            - Invalida cookies relacionadas
+
+        Retorna:
+            dict: Siempre {"success": True, "message": str}
+        """
         session.clear()
         self.__logs.info("Se cerro la session de usuario")
         return {"success": True, "message": "Sesión cerrada exitosa"}
 
     def verificar_sesion(self) -> dict[str, bool | str | dict[str, int | str]]:
-        """Verifica si hay una sesión activa."""
+        """Verifica la existencia de una sesión de usuario activa
+
+        Comprueba si las variables de sesión contienen datos de autenticación válidos.
+
+        Returns:
+            dict: Resultado con:
+                - success (bool): Estado de la operación
+                - message (str): Mensaje descriptivo
+                - usuario (dict, opcional): Datos del usuario si la sesión está activa
+
+        Ejemplo:
+            resultado = servicio.verificar_sesion()
+        """
         if "usuario_id" in session:
             return {
                 "success": True,
@@ -82,7 +148,19 @@ class ServicioAutenticacion:
         return {"success": False, "message": "No hay sesión activa"}
 
     def obtener_datos_del_usuario(self) -> list[dict[str, str | int | None]] | None:
-        """Obtiene datos de todos los usuarios."""
+        """Recupera información detallada de todos los usuarios registrados
+
+        Obtiene datos sensibles como contraseñas cifradas (uso interno restringido).
+
+        Returns:
+            list[dict]|None: Lista de diccionarios con datos de usuarios. None si hay errores.
+
+        Raises:
+            DatabaseError: Si falla la consulta a la base de datos
+
+        Ejemplo:
+            datos_usuarios = servicio.obtener_datos_del_usuario()
+        """
         self.__logs.info("Se esta intentando conseguir los datos de usuario")
         usuarios = self.servicio_usuario.obtener_usuarios()
 
@@ -104,6 +182,21 @@ class ServicioAutenticacion:
         return datos_usaurios
 
     def descifrar_password(self, password_encriptado: str) -> str:
-        """Descifra una contraseña encriptada."""
+        """Convierte una contraseña cifrada a texto legible
+
+        Utiliza la clave simétrica configurada para realizar el descifrado.
+
+        Args:
+            password_encriptado (str): Contraseña encriptada con Fernet
+
+        Returns:
+            str: Contraseña descifrada en texto plano
+
+        Raises:
+            cryptography.fernet.InvalidToken: Si el token es inválido o la clave incorrecta
+
+        Ejemplo:
+            password_original = servicio.descifrar_password(token_cifrado)
+        """
         self.__logs.info("Se esta descifrando la contraseña")
         return self.cypher.decrypt(password_encriptado.encode()).decode()

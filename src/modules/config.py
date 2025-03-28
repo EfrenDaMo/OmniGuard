@@ -3,9 +3,28 @@ from dotenv import load_dotenv
 
 
 class Configuracion:
-    """Maneja la configuración de la applicación con variables de entornó"""
+    """Gestor centralizado de configuración de la aplicación.
+
+    Carga y valida variables de entorno desde un archivo .env.
+    Proporciona configuraciones estructuradas para diferentes módulos.
+
+    Atributos:
+        DB_USER (str): Usuario de la base de datos
+        DB_PASSWORD (str): Contraseña de la base de datos
+        LOG_FILE (str): Ruta del archivo de logs
+        APP_SECRET (str): Clave secreta para sesiones Flask
+
+    Métodos:
+        obtener_config_bd(): Retorna configuración para MySQL
+        obtener_config_app(): Retorna configuración para Flask
+        obtener_config_log(): Retorna configuración para logging
+
+    Raises:
+        RuntimeError: Si falta el archivo .env
+    """
 
     def __init__(self) -> None:
+        """Inicializa y valida la configuración desde variables de entorno."""
         if not load_dotenv():
             raise RuntimeError("No se encontro un archivo .env")
 
@@ -28,9 +47,20 @@ class Configuracion:
         self.LOG_LEVEL: str = os.getenv("LOG_LEVEL", "INFO")
 
     def obtener_config_bd(self) -> dict[str, str | int]:
-        """
-        Obtiene la configuración de solo la base de datos.
-        Esto para evitar la interacción con otras configuraciones.
+        """Configuración para conexión a MySQL.
+
+        Retorna:
+            dict: Parámetros de conexión con estructura:
+                {
+                    "user": str,
+                    "password": str,
+                    "host": str,
+                    "port": int,
+                    "database": str
+                }
+
+        Ejemplo:
+            {'user': 'admin', 'password': 'secret', ...}
         """
         return {
             "user": self.DB_USER,
@@ -41,9 +71,19 @@ class Configuracion:
         }
 
     def obtener_config_app(self) -> dict[str, bool | str | int]:
-        """
-        Obtiene la configuración de solo la applicación
-        Esto para evitar la interacción con otras configuraciones.
+        """Configuración principal de la aplicación Flask.
+
+        Retorna:
+            dict: Parámetros críticos para el funcionamiento:
+                {
+                    "Key": str,
+                    "Port": int,
+                    "Host": str,
+                    "Debug": bool,
+                    "Secret": str
+                }
+        Ejemplo:
+            {'key': 'key', 'host': 'localhost', ...}
         """
         return {
             "Key": self.APP_KEY,
@@ -54,9 +94,16 @@ class Configuracion:
         }
 
     def obtener_config_log(self) -> dict[str, str]:
-        """
-        Obtiene la configuración de solo el logger.
-        Esto para evitar la interacción con otras configuraciones.
+        """Configuración para el sistema de registros
+
+        Retorna:
+            dict: Parámetros críticos para el funcionamiento:
+                {
+                    "File": str,
+                    "Level": str,
+                }
+        Ejemplo:
+            {'file': 'log.log', 'level': 'Debug', ...}
         """
         return {
             "File": self.LOG_FILE,

@@ -9,7 +9,22 @@ from modules.logging import Logs
 
 
 class BasedeDatos:
-    """Maneja la conexión con la Base de Datos implementado los métodos CRUD."""
+    """Gestor de operaciones CRUD para MySQL con manejo de transacciones.
+
+    Atributos:
+        __cursor (MySQLCursorAbstract): Cursor para ejecutar consultas
+        __conexion (MySQLConnectionAbstract): Conexión activa a la DB
+
+    Features:
+        - Reconexión automática
+        - Transacciones ACID
+        - Logging integrado
+
+    Ejemplo:
+        bd = BasedeDatos()
+        bd.conectar()
+        usuarios = bd.leer("usuarios")
+    """
 
     def __init__(self) -> None:
         """Crea un nuevo objeto de la conexión y la inica."""
@@ -19,7 +34,17 @@ class BasedeDatos:
         self.__config: dict[str, str | int] = Configuracion().obtener_config_bd()
 
     def conectar(self) -> None:
-        """Crea una nueva conexión a la base de datos y activa el cursor."""
+        """Establece conexión con la base de datos.
+
+        Acciones:
+            - Crea nueva conexión usando parámetros de Configuracion
+            - Configura isolation level a READ COMMITTED
+            - Habilita cursor con retorno de diccionarios
+
+        Raises:
+            mysql.connector.Error: Error de conexión
+            RuntimeError: Configuración faltante
+        """
         try:
             self.__logs.info("Intentando conectarse a la base de datos")
             conexion = mysql.connector.connect(**self.__config)
@@ -52,11 +77,17 @@ class BasedeDatos:
         consulta: str,
         parametros: list[str] | None = None,
     ) -> None:
-        """
-        Método para ejecutar consultas SQL.
+        """Ejecuta una consulta SQL genérica
 
-        :param consulta: La consulta que se ejecutará
-        :param params: Parámetros de la consulta (Opcional)
+        Método interno para ejecutar operaciones SQL con manejo de errores y reconexión automática.
+
+        Args:
+            consulta (str): Consulta SQL a ejecutar
+            parametros (list[str]|None): Parámetros para la consulta (opcional)
+
+        Raises:
+            mysql.connector.Error: Si ocurre un error en la ejecución
+            RuntimeError: Si no hay conexión establecida
         """
         if not self.__conexion:
             self.conectar()
@@ -72,11 +103,18 @@ class BasedeDatos:
             raise
 
     def crear(self, tabla: str, datos: dict[str, str]) -> None:
-        """
-        Crear un nuevo registro.
+        """Inserta un nuevo registro en la tabla especificada.
 
-        :param tabla: Nombre de la tabla
-        :param datos: Diccionario con pares de campo:valor
+        Args:
+            tabla (str): Nombre de la tabla
+            datos (dict): Pares campo-valor para la inserción
+
+        Ejemplo:
+            crear("usuarios", {"nombre": "Ana", "password": "***"})
+
+        Raises:
+            mysql.connector.Error: Error de sintaxis SQL
+            KeyError: Campos inválidos
         """
         valores = list(datos.values())
         campos = ", ".join(datos.keys())
@@ -102,13 +140,18 @@ class BasedeDatos:
         condiciones: dict[str, str] | None = None,
         campos: list[str] | str = "*",
     ) -> list[RowType | dict[str, RowItemType]]:
-        """
-        Leer registro de la tabla.
+        """Obtiene registros de una tabla con filtros opcionales.
 
-        :param tabla: Nombre de la tabla
-        :param condiciones: Diccionario opcional que contiene las condiciones de lectura
-        :param campos: Campos a seleccionar, todos por defecto
-        :return: Lista de los registros
+        Args:
+            tabla (str): Nombre de la tabla
+            condiciones (dict): Filtros WHERE como pares clave-valor
+            campos (list|str): Campos a seleccionar (default: todos)
+
+        Retorna:
+            list: Lista de registros como diccionarios
+
+        Ejemplo:
+            bd.leer("usuarios", {"id": 5}, ["nombre", "email"])
         """
         try:
             if isinstance(campos, list):
@@ -137,13 +180,23 @@ class BasedeDatos:
         datos: dict[str, str],
         condiciones: dict[str, str],
     ) -> int:
-        """
-        Actualizar registro(s).
+        """Actualiza registros en la base de datos
 
-        :param tabla: Nombre de la tabla
-        :param datos: Diccionario de campos a actualizar
-        :param condiciones: Condiciones para la actualización
-        :return: Número de registros actualizados
+        Modifica campos específicos de registros que cumplan con las condiciones.
+
+        Args:
+            tabla (str): Nombre de la tabla objetivo
+            datos (dict[str, str]): Campos y valores a actualizar
+            condiciones (dict[str, str]): Condiciones para filtrar registros
+
+        Returns:
+            int: Número de filas afectadas. 0 si no hay cambios.
+
+        Raises:
+            mysql.connector.Error: Si la consulta es inválida
+
+        Ejemplo:
+            filas_afectadas = bd.actualizar("usuarios", {"rol": "admin"}, {"id": 5})
         """
         clausula_set = ", ".join([f"`{campo}`=%s" for campo in datos.keys()])
         clausula_where = " AND ".join([f"`{campo}`=%s" for campo in condiciones.keys()])
@@ -165,12 +218,22 @@ class BasedeDatos:
             self.desconectar()
 
     def eliminar(self, tabla: str, condiciones: dict[str, str]) -> int:
-        """
-        Eliminar registro(s).
+        """Elimina registros de la base de datos
 
-        :param tabla: Nombre de la tabla
-        :param condiciones: Condiciones para la eliminación
-        :return: Numero de registros eliminados
+        Borra permanentemente registros que cumplan con las condiciones especificadas.
+
+        Args:
+            tabla (str): Nombre de la tabla objetivo
+            condiciones (dict[str, str]): Condiciones para filtrar registros
+
+        Returns:
+            int: Número de filas eliminadas. 0 si no hay coincidencias.
+
+        Raises:
+            mysql.connector.Error: Si la consulta es inválida
+
+        Ejemplo:
+            filas_eliminadas = bd.eliminar("logs", {"fecha": "2022-01-01"})
         """
         clausula_where = " AND ".join([f"`{campo}`=%s" for campo in condiciones.keys()])
 
@@ -191,13 +254,29 @@ class BasedeDatos:
             self.desconectar()
 
     def confirmar(self) -> None:
-        """Confirma la transacción actual"""
+        """Confirma la transacción actual.
+
+        Acciones:
+            - Ejecuta COMMIT
+            - Registra confirmación en logs
+
+        Uso típico:
+            Después de operaciones de escritura exitosas
+        """
         if self.__conexion:
             self.__conexion.commit()
             self.__logs.info("Se confirmo la transacción")
 
     def revertir(self) -> None:
-        """Revierte la transacción actual"""
+        """Revierte la transacción actual
+
+        Acciones:
+            - Ejecuta ROLLBACK
+            - Registra reversión logs
+
+        Uso típico:
+            Después de operaciones de escritura no exitosas
+        """
         if self.__conexion:
             self.__conexion.rollback()
             self.__logs.info("Se revirtio la transacción")

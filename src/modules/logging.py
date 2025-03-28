@@ -4,9 +4,21 @@ from modules.config import Configuracion
 
 
 class Logs:
-    """Systema central para hacer logging en la applicacion"""
+    """Sistema centralizado de logging para la aplicación.
+
+    Configura y gestiona los registros de la aplicación usando el módulo logging.
+    Crea un logger principal con manejo de archivos y formato estructurado.
+
+    Atributos:
+        logger (logging.Logger): Instancia del logger configurado.
+
+    Ejemplo de uso:
+        logs = Logs()
+        logs.info("Mensaje informativo", user_id=123)
+    """
 
     def __init__(self) -> None:
+        """Inicializa el logger con configuración desde el archivo .env."""
         self.__config = Configuracion().obtener_config_log()
         self.logger: logging.Logger = logging.getLogger("OmniGuard")
         self.logger.setLevel(self.__config["Level"])
@@ -27,25 +39,55 @@ class Logs:
         self.logger.addHandler(manejador_archivo)
 
     def debug(self, mensaje: str, **kwargs: Any) -> None:
-        """Mensaje Debug Log"""
+        """Registra un mensaje de nivel DEBUG.
+
+        Args:
+            mensaje (str): Texto descriptivo del evento
+            **kwargs: Campos adicionales para el registro (ej: user_id=45)
+        """
         self.logger.debug(mensaje, extra=kwargs)
 
     def info(self, mensaje: str, **kwargs: Any) -> None:
-        """Mensaje Info Log"""
+        """Registra un mensaje de nivel INFO.
+
+        Args:
+            mensaje (str): Texto descriptivo del evento
+            **kwargs: Campos adicionales para el registro (ej: user_id=45)
+        """
         self.logger.info(mensaje, extra=kwargs)
 
     def warning(self, mensaje: str, **kwargs: Any) -> None:
-        """Mensaje Aviso Log"""
+        """Registra un mensaje de nivel WARNING.
+
+        Args:
+            mensaje (str): Texto descriptivo del evento
+            **kwargs: Campos adicionales para el registro (ej: user_id=45)
+        """
         self.logger.warning(mensaje, extra=kwargs)
 
     def error(self, mensaje: str, **kwargs: Any) -> None:
-        """Mensaje Error Log"""
+        """Registra un mensaje de nivel ERROR.
+
+        Args:
+            mensaje (str): Texto descriptivo del evento
+            **kwargs: Campos adicionales para el registro (ej: user_id=45)
+        """
         self.logger.error(mensaje, extra=kwargs)
 
     def critical(self, mensaje: str, **kwargs: Any) -> None:
-        """Mensaje Critico Log"""
+        """Registra un mensaje de nivel CRITICAL.
+
+        Args:
+            mensaje (str): Texto descriptivo del evento
+            **kwargs: Campos adicionales para el registro (ej: user_id=45)
+        """
         self.logger.critical(mensaje, extra=kwargs)
 
-    def excepcion(self, mensaje: str, **kwargs: Any) -> None:
-        """Excepcion Log con stack trace"""
+    def exception(self, mensaje: str, **kwargs: Any) -> None:
+        """Registra un mensaje de nivel Exception.
+
+        Args:
+            mensaje (str): Texto descriptivo del evento
+            **kwargs: Campos adicionales para el registro (ej: user_id=45)
+        """
         self.logger.exception(mensaje, extra=kwargs)

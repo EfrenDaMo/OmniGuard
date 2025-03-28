@@ -1,5 +1,7 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 from modules.config import Configuracion
 
@@ -10,12 +12,22 @@ from modules.routes_user import usuarios_bp
 
 
 class Applicacion:
-    """
-    Clase de la applicación principal,
-    se usa para inicializarla y ejecutarla
+    """Clase principal de configuración y ejecución de la aplicación Flask.
+
+    Responsabilidades:
+        - Carga configuración desde .env
+        - Inicializa componentes principales
+        - Registra blueprints (rutas)
+        - Configura seguridad y CORS
+        - Maneja errores globales
+
+    Uso:
+        app = Applicacion()
+        app.ejecutar()
     """
 
     def __init__(self) -> None:
+        """Constructor que inicializa todos los componentes."""
         # Obtiene la configuración para la applicación
         self.__config: dict[str, str | bool | int] = (
             Configuracion().obtener_config_app()
@@ -37,10 +49,19 @@ class Applicacion:
         self.flask_app.debug = bool(self.__config["Debug"])
         self.flask_app.secret_key = self.__config["Secret"]
 
+        # Se configuran cookies
         self.flask_app.config.update(
             SESSION_COOKIE_SECURE=True,
             SESSION_COOKIE_HTTPONLY=True,
             SESSION_COOKIE_SAMESITE="Lax",
+        )
+
+        # Inicializar limitador
+        self.limiter = Limiter(
+            app=self.flask_app,
+            key_func=get_remote_address,
+            default_limits=["200 per day", "50 per hour"],
+            storage_uri="memory://",
         )
 
         # Registra los blueprints generados en otros modulos
@@ -54,6 +75,8 @@ class Applicacion:
             return jsonify({"success": False, "message": "Error interno de servidor"})
 
     def ejecutar(self) -> None:
+        """Inicia el servidor web con la configuración cargada."""
+        self.limiter.init_app(self.flask_app)
         self.logger.info(
             "Iniciando el servidor de applicación",
             host=self.__config["Host"],

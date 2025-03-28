@@ -17,7 +17,23 @@ logs = Logs()
 @usuarios_bp.route("/api/users", methods=["GET"])
 @require_login
 def obtener_usuarios():
-    """Endpoint para obtener todos los usuarios."""
+    """Obtiene lista completa de usuarios registrados.
+
+    Método: POST
+    Requiere:
+        - Sesión activa con privilegios de administrador
+
+    Respuestas:
+        200 (éxito):
+            {"success": True, "usuarios": [lista_de_usuarios]}
+        401 (error):
+            {"success": False, "message": "No autorizado"}
+        500 (error):
+            {"success": False, "message": "Error del servidor"}
+
+    Cabeceras:
+        - Cache-Control: no-store (previene almacenamiento en caché)
+    """
     logs.debug("Peticion para conseguir usuarios")
 
     try:
@@ -40,7 +56,21 @@ def obtener_usuarios():
 @usuarios_bp.route("/api/users/decrypt-password/<int:id_usuario>", methods=["POST"])
 @require_login
 def desencriptar_password(id_usuario: int):
-    """Endpoint para desencriptar contraseña"""
+    """Endpoint para desencriptar contraseña
+
+    Método: POST
+    Parámetros:
+        id_usuario (int): ID del usuario objetivo
+
+    Respuestas:
+        200 (éxito):
+            {"success": True, "password": "contraseña_desencriptada"}
+        404 (error):
+            {"success": False, "message": "Usuario no encontrado"}
+        500 (error):
+            {"success": False, "message": "Error de desencriptación"}
+
+    """
     logs.debug("Peticion para desencriptar la contraseña")
 
     try:

@@ -3,7 +3,16 @@ from dataclasses import asdict, dataclass
 
 @dataclass
 class Usuario:
-    """Modelo Usuario que representa la tabla de la base de datos."""
+    """Modelo de datos para representar usuarios del sistema.
+
+    Campos:
+        nombre (str): Nombre único de usuario (requerido)
+        password (str): Contraseña cifrada (requerido)
+        id (int|None): ID único autogenerado (opcional)
+
+    Métodos:
+        a_dict(): Convierte el modelo a diccionario, excluyendo valores nulos
+    """
 
     nombre: str
     password: str
