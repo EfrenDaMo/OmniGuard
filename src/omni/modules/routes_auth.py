@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
 
-from modules.logging import Logs
-from modules.limiter import limiter
-from modules.database import BasedeDatos
-from modules.services_auth import ServicioAutenticacion
+from omni.modules.logging import Logs
+from omni.modules.limiter import limiter
+from omni.modules.database import BasedeDatos
+from omni.modules.services_auth import ServicioAutenticacion
 
 
 auth_bp = Blueprint("auth", __name__)

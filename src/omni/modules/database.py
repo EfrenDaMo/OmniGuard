@@ -2,10 +2,10 @@ import sys
 import mysql.connector
 from mysql.connector.types import RowItemType, RowType
 
-from modules.config import Configuracion
+from omni.modules.config import Configuracion
 from mysql.connector.abstracts import MySQLConnectionAbstract, MySQLCursorAbstract
 
-from modules.logging import Logs
+from omni.modules.logging import Logs
 
 
 class BasedeDatos:
