@@ -4,14 +4,14 @@ Una plataforma web basada en flask para autenticacion segura, manejo de usuarios
 
 
 ## Tabla de contenidos
-- [Características Clave](<README.md#🚀 Características Clave:>)
-- [Tecnologías Utilizadas](<README.md#💻 Tecnologías Utilizadas>)
-- [Instalación](<README.md#📥 Instalación>)
-- [Configuración](<README.md#⚙️ Configuración>)
-- [Documentación API](<README.md#📚 Documentación API>)
-- [Licencia](<README.md#📜 Licencia>)
+- [Características Clave](#caracteristicas-clave)
+- [Tecnologías Utilizadas](#tecnologias-utilizadas)
+- [Instalación](#instalacion)
+- [Configuración](#configuracion)
+- [Documentación API](#documentacion-api)
+- [Licencia](#licencia)
 
-### 🚀 Características Clave:
+### <a id="caracteristicas-clave"></a>🚀 Características Clave:
 - **Encriptación de Nivel Militar**: Cifrado simétrico con Fernet para almacenamiento de contraseñas
 - **Gestión de Sesiones**: Cookies seguras con políticas SameSite
 - **Límite de Intentos**: 5 intentos de login/minuto contra ataques de fuerza bruta
@@ -19,7 +19,7 @@ Una plataforma web basada en flask para autenticacion segura, manejo de usuarios
 - **Control de Acceso**: Decorador @require_login para rutas protegidas
 - **Transacciones ACID**: Operaciones atómicas con MariaDB
 
-### 💻 Tecnologías Utilizadas
+### <a id="tecnologias-utilizadas"></a>💻 Tecnologías Utilizadas
 ![Python](https://img.shields.io/badge/Python-3.13.%2B-blue?logo=python&logoColor=yellow&logoSize=auto)
 ![Flask](https://img.shields.io/badge/Flask-3.1.x-lightgrey?logo=flask&logoSize=auto)
 ![MariaDB](https://img.shields.io/badge/MariaDB-11.7.2--1-orange?logo=mariadb&logoSize=auto)
@@ -31,11 +31,11 @@ Una plataforma web basada en flask para autenticacion segura, manejo de usuarios
 | Seguridad      | Fernet (AES-128-CBC) + Cookies Seguras |
 | Logging        | Sistema personalizado                  |
 
-### 📥 Instalación
+### <a id="instalacion"></a>📥 Instalación {#instalacion}
 
-### ⚙️ Configuración
+### <a id="configuracion"></a>⚙️ Configuración
 
-### 📚 Documentación API
+### <a id="documentacion-api"></a>📚 Documentación API
 
-### 📜 Licencia
+### <a id="licencia"></a>📜 Licencia
 Licencia MIT - Ver LICENSE.md para detalles
