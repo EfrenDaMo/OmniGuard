@@ -1,10 +1,10 @@
 from flask import session
 
-from modules.logging import Logs
-from modules.models import Usuario
-from modules.config import Configuracion
-from modules.database import BasedeDatos
-from modules.services_user import ServicioUsuario
+from omni.modules.logging import Logs
+from omni.modules.models import Usuario
+from omni.modules.config import Configuracion
+from omni.modules.database import BasedeDatos
+from omni.modules.services_user import ServicioUsuario
 
 from cryptography.fernet import Fernet
 

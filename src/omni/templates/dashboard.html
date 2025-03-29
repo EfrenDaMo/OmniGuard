@@ -3,7 +3,7 @@
 
 {# Importa CSS relevante a la pagina #}
 {% block importes %}
-<link rel="stylesheet" href="/static/style_dashboard.css">
+<link rel="stylesheet" href="/static/css/style_dashboard.css">
 {% endblock %}
 
 
@@ -80,6 +80,6 @@
         </table>
     </div>
 
-    <script type="module" src="{{ url_for('static', filename='script_dashboard.js') }}"></script>
+    <script type="module" src="{{ url_for('static', filename='js/script_dashboard.js') }}"></script>
 </div>
 {% endblock %}

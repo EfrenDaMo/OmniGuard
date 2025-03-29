@@ -1,6 +1,6 @@
-from modules.logging import Logs
-from modules.models import Usuario
-from modules.database import BasedeDatos
+from omni.modules.logging import Logs
+from omni.modules.models import Usuario
+from omni.modules.database import BasedeDatos
 
 
 class ServicioUsuario:
@@ -136,7 +136,12 @@ class ServicioUsuario:
         Ejemplo:
             servicio.actualizar_usuario("admin", {"password": "nueva_clave"})
         """
-        self.__logs.info("Se logro actualizar el usuario", nombre=nombre)
+        self.__logs.info("se esta intentando actualizar el usuario", nombre=nombre)
+        usuario = self.obtener_usuarios_con_nombre(nombre)
+
+        if not usuario:
+            return 0
+
         return self.bd.actualizar("usuario", datos_actualizados, {"nombre": nombre})
 
     def borrar_usuario(self, nombre: str) -> int:

@@ -1,9 +1,9 @@
 from flask import Blueprint, jsonify, request
 
-from modules.database import BasedeDatos
-from modules.logging import Logs
-from modules.routes import require_login
-from modules.services_auth import ServicioAutenticacion
+from omni.modules.database import BasedeDatos
+from omni.modules.logging import Logs
+from omni.modules.routes import require_login
+from omni.modules.services_auth import ServicioAutenticacion
 
 
 usuarios_bp = Blueprint("usuarios", __name__)
@@ -75,11 +75,16 @@ def actualizar_usuario():
     datos = request.json
 
     if not datos or "nombre_actual" not in datos or "nuevo_nombre" not in datos:
+        logs.error("Datos incompletos")
         return jsonify({"success": False, "message": "Datos incompletos"}), 400
 
     nombre_actual: str = datos["nombre_actual"]
     nuevo_nombre: str = datos["nuevo_nombre"]
     nueva_password: str | None = datos.get("nueva_password", "")
+
+    logs.debug(
+        f"Nombre actual: {nombre_actual}, Nuevo nombre: {nuevo_nombre}, Nuevo password: {nueva_password}"
+    )
 
     # Prepare update data
     datos_actualizados = {"nombre": nuevo_nombre}
@@ -87,18 +92,27 @@ def actualizar_usuario():
     if nueva_password:
         password_encriptado = serv_auth.cypher.encrypt(nueva_password.encode()).decode()
         datos_actualizados["password"] = password_encriptado
+        logs.debug("Se encripto la contraseña")
+
+    logs.debug(
+        f"Nombre actual: {datos_actualizados['nombre']}, Nuevo password: {datos_actualizados['password']}"
+    )
 
     try:
         # Update user
         filas_afectadas = serv_auth.servicio_usuario.actualizar_usuario(
             nombre_actual, datos_actualizados
         )
+        logs.debug("se logro servicio")
+        logs.debug(f"{filas_afectadas}")
 
         if filas_afectadas > 0:
+            logs.debug("Se actualizo el usuario")
             return jsonify(
-                {"success": True, "message": "Usuario actualizado correctamente"}
+                {"success": True, "message": "Usuario actualizado correctamente"}, 200
             )
 
+        logs.debug("No se pudo actualizar el usuario")
         return jsonify({"success": False, "message": "Usuario no encontrado"}), 404
     except Exception as err:
         logs.error("Error al actualizar usuario", error=str(err))
@@ -137,7 +151,7 @@ def eliminar_usuario(id_usuario: int):
 
         if not usuario_clave:
             logs.warning("No se encontro el usuario que se buscaba")
-            return jsonify({"success": False, "message": "Usuario no encotrado"}), 404
+            return jsonify({"success": False, "message": "Usuario no encotrado"}), 500
 
         filas_afectadas = serv_auth.servicio_usuario.borrar_usuario(
             str(usuario_clave["nombre"])

@@ -1,4 +1,4 @@
-from modules.logging import Logs
+from omni.modules.logging import Logs
 from functools import wraps
 from flask import (
     Blueprint,

@@ -1,13 +1,13 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 
-from modules.limiter import limiter
-from modules.config import Configuracion
+from omni.modules.limiter import limiter
+from omni.modules.config import Configuracion
 
-from modules.logging import Logs
-from modules.routes import omni_bp
-from modules.routes_auth import auth_bp
-from modules.routes_user import usuarios_bp
+from omni.modules.logging import Logs
+from omni.modules.routes import omni_bp
+from omni.modules.routes_auth import auth_bp
+from omni.modules.routes_user import usuarios_bp
 
 
 class Applicacion:

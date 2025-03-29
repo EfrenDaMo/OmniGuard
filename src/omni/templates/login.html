@@ -3,7 +3,7 @@
 
 {# Importa CSS relevante a la pagina #}
 {% block importes %}
-<link rel="stylesheet" href="/static/style_login.css">
+<link rel="stylesheet" href="/static/css/style_login.css">
 {% endblock %}
 
 {# Inserta el contenido de la pagina #}
@@ -40,7 +40,7 @@
 </div>
 
 <!-- Script de Login-->
-<script type="module" src="{{ url_for('static', filename='script_login.js') }}"></script>
+<script type="module" src="{{ url_for('static', filename='js/script_login.js') }}"></script>
 
 <!-- Script de reCAPTCHA -->
 <script src="https://www.google.com/recaptcha/api.js" async defer></script>

@@ -1,6 +1,6 @@
 import logging
 from typing import Any
-from modules.config import Configuracion
+from omni.modules.config import Configuracion
 
 
 class Logs:
