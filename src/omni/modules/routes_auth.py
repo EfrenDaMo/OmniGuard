@@ -3,6 +3,7 @@ from flask import Blueprint, jsonify, request
 from omni.modules.logging import Logs
 from omni.modules.limiter import limiter
 from omni.modules.database import BasedeDatos
+from omni.modules.routes import require_login
 from omni.modules.services_auth import ServicioAutenticacion
 
 
@@ -101,6 +102,7 @@ def login():
 
 
 @auth_bp.route("/api/logout", methods=["POST"])
+@require_login
 def logout():
     """Cierra la sesión del usuario actual.
 

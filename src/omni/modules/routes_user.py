@@ -122,7 +122,7 @@ def actualizar_usuario():
 @usuarios_bp.route("/api/users/delete/<int:id_usuario>", methods=["DELETE"])
 @require_login
 def eliminar_usuario(id_usuario: int):
-    """Endpoint para actualizar datos de un usuario
+    """Endpoint para eliminar un usuario
 
     Método: DELETE
 
@@ -175,7 +175,7 @@ def eliminar_usuario(id_usuario: int):
 @usuarios_bp.route("/api/users/decrypt-password/<int:id_usuario>", methods=["GET"])
 @require_login
 def desencriptar_password(id_usuario: int):
-    """Endpoint para desencriptar contraseña
+    """Endpoint para desencriptar contraseña de un usuario especifico
 
     Método: POST
     Parámetros:
