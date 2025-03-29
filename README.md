@@ -4,12 +4,12 @@ Una plataforma web basada en flask para autenticacion segura, manejo de usuarios
 
 
 ## Tabla de contenidos
-- [Características Clave](<README#🚀 Características Clave:>)
-- [Tecnologías Utilizadas](<README#💻 Tecnologías Utilizadas>)
-- [Instalación](<README#📥 Instalación>)
-- [Configuración](<README#⚙️  Configuración>)
-- [Documentación API](<README#📚 Documentación API>)
-- [Licencia](<README#📜 Licencia>)
+- [Características Clave](<README.md#🚀 Características Clave:>)
+- [Tecnologías Utilizadas](<README.md#💻 Tecnologías Utilizadas>)
+- [Instalación](<README.md#📥 Instalación>)
+- [Configuración](<README.md#⚙️ Configuración>)
+- [Documentación API](<README.md#📚 Documentación API>)
+- [Licencia](<README.md#📜 Licencia>)
 
 ### 🚀 Características Clave:
 - **Encriptación de Nivel Militar**: Cifrado simétrico con Fernet para almacenamiento de contraseñas
@@ -33,7 +33,7 @@ Una plataforma web basada en flask para autenticacion segura, manejo de usuarios
 
 ### 📥 Instalación
 
-### ⚙️  Configuración
+### ⚙️ Configuración
 
 ### 📚 Documentación API
 
